@@ -23,13 +23,13 @@ app.use(function (req, res, next) {
     else next();
 });
 
-app.use(express.json())//中间键
-const update = multer({
+app.use(express.json())// 使用Express JSON中间件，以便自动解析请求体中的JSON数据
+const update = multer({// 初始化Multer中间件配置，指定临时文件上传目录
     dest:"./public/upload/temp"
 })
-app.use(update.any())
+app.use(update.any())// 使用Multer中间件处理所有的文件上传请求 这将匹配所有路由，并接收任何类型的文件上传
 
-
+app.use("/test",require("./routers/TestRouter"))// 加载TestRouter模块，用于处理/test相关的路由请求
 
 
 app.get("/",(req,res)=>{
