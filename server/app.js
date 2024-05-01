@@ -30,7 +30,7 @@ const update = multer({// 初始化Multer中间件配置，指定临时文件上
 app.use(update.any())// 使用Multer中间件处理所有的文件上传请求 这将匹配所有路由，并接收任何类型的文件上传
 
 app.use("/test",require("./routers/TestRouter"))// 加载TestRouter模块，用于处理/test相关的路由请求
-
+app.use("/admin",require("./routers/AdminRouter"))
 
 app.get("/",(req,res)=>{
     res.send("helloworld")
