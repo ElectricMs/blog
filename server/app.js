@@ -8,7 +8,7 @@ const express=require("express")
 const multer=require("multer")
 const app=express();
 const port=8080
-
+const path=require("path")
 
 
 //开放跨域请求
@@ -28,9 +28,16 @@ const update = multer({// 初始化Multer中间件配置，指定临时文件上
     dest:"./public/upload/temp"
 })
 app.use(update.any())// 使用Multer中间件处理所有的文件上传请求 这将匹配所有路由，并接收任何类型的文件上传
+//指定静态资源路径
+app.use(express.static(path.join(__dirname,"public")))
 
+
+//注册接口
 app.use("/test",require("./routers/TestRouter"))// 加载TestRouter模块，用于处理/test相关的路由请求
 app.use("/admin",require("./routers/AdminRouter"))
+app.use("/category",require("./routers/CategoryRouter"))
+app.use("/blog",require("./routers/BlogRouter"))
+app.use("/upload", require("./routers/UploadRouter"))
 
 app.get("/",(req,res)=>{
     res.send("helloworld")
