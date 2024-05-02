@@ -23,8 +23,15 @@
 <script setup>
 
 import { ref, reactive,inject} from 'vue'
+import { AdminStore} from '../stores/AdminStore'
+import { useRouter, useRoute } from 'vue-router'
 
+//实例化
 const axios =inject("axios")
+const adminStore=AdminStore()
+const message=inject("message")
+const router = useRouter()
+const route = useRoute()
 
 /**验证表单规则 */
 let rules = {
@@ -40,16 +47,32 @@ let rules = {
 
 /**管理员登录数据 */
 const admin = reactive({
-    account: "",
-    password:  "",
-    rember: false
+    account: localStorage.getItem("account") || "",//尝试从已经保存了的账号密码那读取
+    password: localStorage.getItem("password") || "",//如果没有则为空 等待输入
+    rember: localStorage.getItem("rember") == 1 || false
 })
 
 const login=async()=>{
+
     let result = await axios.post("/admin/login", {/**返回值 */
         account: admin.account,/**参照AdminRouter */
         password: admin.password
     });
+
+    if (result.data.code == 200) {//登录成功 参见AdminRouter
+        adminStore.token = result.data.data.token
+        adminStore.account = result.data.data.account
+        adminStore.id = result.data.data.id
+        if (admin.rember) {
+            localStorage.setItem("account", admin.account)
+            localStorage.setItem("password", admin.password)
+            localStorage.setItem("rember", admin.rember ? 1 : 0)
+        }
+        router.push("/dashboard")
+        message.success("登录成功")
+    } else {
+        message.error("登录失败")
+    }
     console.log(result)
 }
 
