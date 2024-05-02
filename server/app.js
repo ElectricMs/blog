@@ -9,7 +9,7 @@ const multer=require("multer")
 const app=express();
 const port=8080
 const path=require("path")
-
+const { db, genid } = require("./db/DbUtils")
 
 //开放跨域请求
 app.use(function (req, res, next) {
@@ -30,6 +30,29 @@ const update = multer({// 初始化Multer中间件配置，指定临时文件上
 app.use(update.any())// 使用Multer中间件处理所有的文件上传请求 这将匹配所有路由，并接收任何类型的文件上传
 //指定静态资源路径
 app.use(express.static(path.join(__dirname,"public")))
+
+//category/_token/add
+const ADMIN_TOKEN_PATH = "/_token"
+app.all("*", async (req, res, next) => {
+    if (req.path.indexOf(ADMIN_TOKEN_PATH) > -1) {//找到了
+
+        let { token } = req.headers;
+
+        let admin_token_sql = "SELECT * FROM `admin` WHERE `token` = ?"
+        let adminResult = await db.async.all(admin_token_sql,[token])
+        if(adminResult.err != null || adminResult.rows.length == 0){
+            res.send({
+                code: 403,
+                msg: "请先登录"
+            })
+            return 
+        }else{
+            next()
+        }
+    }else{
+        next()
+    }
+})
 
 
 //注册接口

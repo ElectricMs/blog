@@ -3,26 +3,7 @@ const router = express.Router()
 const { db, genid } = require("../db/DbUtils")
 
 
-router.get("/detail", async (req, res) => {
 
-    let { id } = req.query
-    let detail_sql = "SELECT * FROM `blog` WHERE `id` = ? "
-    let { err, rows } = await db.async.all(detail_sql, [id]) ;
-
-    if (err == null) {
-        res.send({
-            code: 200,
-            msg: "获取成功",
-            rows
-        })
-    } else {
-        res.send({
-            code: 500,
-            msg: "获取失败"
-        })
-    }
-
-})
 
 //查询博客 包含模糊查询
 router.get("/search", async (req, res) => {
@@ -102,7 +83,7 @@ router.get("/search", async (req, res) => {
 })
 
 // 删除接口 /blog/delete?id=xxx
-router.delete("/delete", async (req, res) => {//  /_token/delete
+router.delete("/_token/delete", async (req, res) => {//  /_token/delete
     let id = req.query.id
     const delete_sql = "DELETE FROM `blog` WHERE `id` = ?"
     let { err, rows } = await db.async.run(delete_sql, [id])
@@ -122,7 +103,7 @@ router.delete("/delete", async (req, res) => {//  /_token/delete
 })
 
 //修改博客
-router.put("/update", async (req, res) => {//  /_token/update
+router.put("/_token/update", async (req, res) => {//  /_token/update
 
     let { id, title, categoryId, content } = req.body;
     let create_time = new Date().getTime();
@@ -147,7 +128,7 @@ router.put("/update", async (req, res) => {//  /_token/update
 })
 
 //添加博客
-router.post("/add", async (req, res) => {//  /_token/add
+router.post("/_token/add", async (req, res) => {//  /_token/add
 
     let { title, categoryId, content } = req.body;
     let id = genid.NextId();
