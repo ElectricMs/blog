@@ -161,13 +161,15 @@ const toPage = async (pageNum) => {
 const toUpdate = async (blog) => {
     tabValue.value = "update"
     let res = await axios.get("/blog/detail?id=" + blog.id)
+    //console.log(res)
+    //读取文章内容并显示
     updateArticle.id = blog.id
     updateArticle.title = res.data.rows[0].title
     updateArticle.content = res.data.rows[0].content
     updateArticle.categoryId = res.data.rows[0].category_id
 }
 
-const update = async () => {
+const update = async () => {//文章管理里的修改按钮操作
     let res = await axios.put("/blog/_token/update", updateArticle)
     if (res.data.code == 200) {
         message.info(res.data.msg)
@@ -178,7 +180,7 @@ const update = async () => {
     }
 }
 
-const toDelete = async (blog) => {
+const toDelete = async (blog) => {//文章管理里的删除按钮操作
     let res = await axios.delete("/blog/_token/delete?id="+blog.id)
     if (res.data.code == 200) {
         message.info(res.data.msg)

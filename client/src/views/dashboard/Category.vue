@@ -1,7 +1,7 @@
 <template>
   <div>
       <div class="title" >分类管理</div>
-      <n-button @click="showAddModel = true">添加分类</n-button><!--这个按钮不好看 但不知道怎么改-->
+      <n-button @click="showAddModel = true"style="margin-bottom:10px;width: 150px; ">添加分类</n-button><!--这个按钮不好看 但不知道怎么改-->
       <n-table :bordered="false" :single-line="false">
           <thead>
               <tr>
