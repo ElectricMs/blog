@@ -1,7 +1,8 @@
-<!--测试用-->
 <template>
     <div class="main-panel">
+        
         <div class="menus">
+            <div style="height:120px"></div><!--为了好看而加的空白 治疗强迫症-->
             <div v-for="(menu, index) in menus" @click="toPage(menu)"><!--循环遍历渲染  点击事件-->
                 {{ menu.name }}
             </div>

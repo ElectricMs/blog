@@ -1,7 +1,7 @@
 <template>
   <div>
       <div class="title" >分类管理</div>
-      <n-button @click="showAddModel = true">添加分类</n-button>
+      <n-button @click="showAddModel = true">添加分类</n-button><!--这个按钮不好看 但不知道怎么改-->
       <n-table :bordered="false" :single-line="false">
           <thead>
               <tr>
@@ -95,7 +95,7 @@ const loadDatas = async () => {//加载和刷新数据
 }
 
 const add = async () => {//token已经通过拦截器传入
-  let res = await axios.post("/category/_token/add", { name: addCategory.name })
+  let res = await axios.post("/category/_token/add", { name: addCategory.name })//调用对应接口
   if (res.data.code == 200) {
       loadDatas()
       message.info(res.data.msg)
@@ -106,14 +106,14 @@ const add = async () => {//token已经通过拦截器传入
   showAddModel.value = false;
 }
 
-const toUpdate = async (category) =>{
+const toUpdate = async (category) =>{//这些数据要传给服务端
   showUpdateModel.value = true 
   updateCategory.id = category.id
   updateCategory.name = category.name
 }
 
 const update = async ()=>{
-  let res = await axios.put("/category/_token/update", { id:updateCategory.id, name: updateCategory.name })
+  let res = await axios.put("/category/_token/update", { id:updateCategory.id, name: updateCategory.name })//服务端的更新操作
   if (res.data.code == 200) {
       loadDatas()
       message.info(res.data.msg)
