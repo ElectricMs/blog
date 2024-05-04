@@ -2,7 +2,7 @@
     <div class="main-panel">
         
         <div class="menus">
-            <div style="height:120px"></div><!--为了好看而加的空白 治疗强迫症-->
+            <div style="height:125px"></div><!--为了好看而加的空白 治疗强迫症-->
             <div v-for="(menu, index) in menus" @click="toPage(menu)"><!--循环遍历渲染  点击事件-->
                 {{ menu.name }}
             </div>
@@ -78,8 +78,9 @@ function updateIsMobile() {
         line-height: 60px;
         text-align: center;
         width: 200px;
-        height: 100%;
-        border-right: 1px solid #dadada;
+        height: 100vh;
+        border-right: 1px solid #dadada;//这个线怎么延申的刚刚好
+        //position:absolute;
 
         div {
             cursor: pointer;
