@@ -10,6 +10,7 @@ let routes = [
         {path: "/dashboard/article", component: () =>import("../views/dashboard/Article.vue")},
     ] },
     { path: "/", component: () => import("../views/Homepage.vue") },
+    { path: "/detail", component: () => import("../views/Detail.vue") },
 ]
 
 const router = createRouter({

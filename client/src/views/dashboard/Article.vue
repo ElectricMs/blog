@@ -4,7 +4,7 @@
         <n-tab-pane name="list" tab="文章列表">
             <div v-for="(blog, index) in blogListInfo" style="margin-bottom:15px">
                 <n-card :title="blog.title">
-                    {{ blog.content }}
+                    <div v-html="blog.content"></div>
 
                     <template #footer>
                         <n-space align="center">
@@ -206,7 +206,7 @@ const toDelete = async (blog) => {//文章管理里的删除按钮操作
     }
 
     .pagination-item {
-        margin-left: 20px; /* 假设你想要给每个按钮右侧添加16像素间距 */
+        margin-left: 20px;
         font-size:20px
     }
 </style>

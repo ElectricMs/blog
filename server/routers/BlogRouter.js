@@ -66,10 +66,10 @@ router.get("/search", async (req, res) => {
     }
 
     //查分页数据 时间排序
-    let searchSql = " SELECT `id`,`category_id`,`create_time`,`title`,substr(`content`,0,50) AS `content` FROM `blog` " + whereSqlStr + " ORDER BY `create_time` DESC LIMIT ?,? "
+    let searchSql = " SELECT `id`,`category_id`,`create_time`,`title`,substr(`content`,0,400) AS `content` FROM `blog` " + whereSqlStr + " ORDER BY `create_time` DESC LIMIT ?,? "
     // 1 10  2,10    3,5
     // 0,10  10,10   10,5
-    //只传给前端50个字符 因为打印不出来这么多
+    //只传给前端400个字符 因为打印不出来这么多
     let searchSqlParams = params.concat([(page - 1) * pageSize, pageSize])//分页 每页有多少 
 
     //查询数据总数
