@@ -1,14 +1,25 @@
 <template>
+    <img class="frontimg"src="../medias/1.png"/>
+
+    <!--导航栏-->
     <div class="container">
-        <div class="nav">
-            <div @click="homePage">首页</div>
-            <div>
+        <header class="navbar">
+            <div class="left-section">
+                <img src="../medias/logo.png" alt="Logo" class="navbar-logo" />
+                <p>这是一个博客</p>
+            </div>
+            <nav class="navbar-nav">
+                <div class="nav-item" @click="homePage">首页</div>
+                <div class="nav-item" @click="tag">标签</div>
                 <n-popselect @update:value="searchByCategory" v-model:value="selectedCategory" :options="categortyOptions" trigger="click">
                     <div>分类<span>{{ categoryName }}</span></div>
                 </n-popselect>
-            </div>
-            <div @click="dashboard">后台</div>
-        </div>
+                <div class="nav-item" @click="file">归档</div>
+                <div class="nav-item" @click="about">关于</div>
+                <div class="nav-item" @click="dashboard">后台</div>
+            </nav>
+        </header>
+        
         <n-divider />
         <!--查询框-->
         <n-space class="search">
@@ -128,6 +139,18 @@ const homePage = () => {
     router.push("/")
 }
 
+const tag = () => {
+    router.push("/tag")
+}
+
+const file = () => {
+    router.push("/file")
+}
+
+const about = () => {
+    router.push("/about")
+}
+
 const dashboard = () => {
     router.push("/login")
 }
@@ -145,8 +168,67 @@ const dashboard = () => {
     margin: 0 auto;
 }
 
-.nav {
+
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
     display: flex;
+    justify-content: space-between; /* 使元素两端对齐 */
+    align-items: center; /* 垂直居中对齐 */
+    background-color: #ffffff; /* 根据需要调整背景色 */
+    padding: 0 15px; /* 可选，内外边距调整 */
+    height: 60px; /* 根据需要调整高度 */
+    z-index: 100; /* 确保导航栏在最顶层 */
+    border-bottom:2px solid grey;
+}
+
+/* 调整navbar内部元素 */
+.navbar-logo {
+    height: 40px; /* 保持logo大小调整 */
+    object-fit: cover;
+}
+
+
+
+/* 新增样式，用于将图标和文字视为一组，靠左显示 */
+.left-section {
+    display: flex;
+    align-items: center; /* 保证图标和文字垂直居中 */
+}
+
+.left-section p{
+    margin-left:20px;
+    font-size:20px;
+}
+
+/* 保证导航项在一行内显示 */
+.navbar-nav {
+    display: flex;
+    justify-content: space-around; /* 或space-between根据需要调整间距 */
+    align-items: center;
+    height: 60px; /* 根据需要调整高度 */
+}
+
+.nav-item {
+    cursor: pointer; /* 改变鼠标样式，提升交互体验 */
+    padding: 0 15px; /* 为导航项之间提供一些间距 */
+    height: 100%;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #333; /* 文字颜色 */
+}
+
+/* 你可以根据需要调整更多细节，如字体大小、悬停效果等 */
+.nav-item:hover {
+    color: #007bff; /* 示例：悬停颜色变化 */
+}
+
+.nav {
+    
     font-size: 20px;
     padding-top: 20px;
     color: #64676a;
@@ -163,6 +245,11 @@ const dashboard = () => {
             font-size: 12px;
         }
     }
+}
+
+.frontimg{
+    width:100%;
+    height:auto;
 }
 
 .footer {
