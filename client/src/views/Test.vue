@@ -2,6 +2,7 @@
 <template>
     <div>
         Test
+        <img class="backgroundimg"src="../medias/background.jpg"/>
     </div>
 </template>
 

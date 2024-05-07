@@ -14,6 +14,7 @@ let routes = [
     { path: "/file", component: () => import("../views/File.vue") },
     { path: "/tag", component: () => import("../views/Tag.vue") },
     { path: "/about", component: () => import("../views/About.vue") },
+    { path: "/classify", component: () => import("../views/Classify.vue") },
 ]
 
 const router = createRouter({
