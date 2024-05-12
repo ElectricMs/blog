@@ -6,12 +6,12 @@
     </div>
     <div class="maintitle">这是一个博客</div>
     <div class="cover-btns">
-        <a @click="startReading()" class="waves-effect waves-light btn">
-            <i class="fa fa-angle-double-down"></i>
+        <a @click="startReading()">
+            <n-icon size="25"class="icon-maximize"><ArrowDownCircle/></n-icon>
             开始阅读
         </a>
-        <a href="https://github.com/ElectricMs/blog" class="waves-effect waves-light btn" target="_blank">
-            <i class="fab fa-github-alt"></i>
+        <a href="https://github.com/ElectricMs/blog"  target="_blank">
+            <n-icon size="25"class="icon-maximize"><LogoGithub/></n-icon>
             Github
         </a>
     </div>
@@ -25,12 +25,30 @@
                 <p  @click="homePage">这是一个博客</p>
             </div>
             <nav class="navbar-nav">
-                <div class="nav-item" @click="homePage">首页</div>
-                <div class="nav-item" @click="tag">标签</div>
-                <div class="nav-item" @click="classify">分类</div>
-                <div class="nav-item" @click="file">归档</div>
-                <div class="nav-item" @click="about">关于</div>
-                <div class="nav-item" @click="dashboard">后台</div>
+                <div class="nav-item" @click="homePage">
+                    <n-icon size="18"class="icon-maximize"><HomeSharp/></n-icon>
+                    首页
+                </div>
+                <div class="nav-item" @click="tag">
+                    <n-icon size="18"class="icon-maximize"><PricetagsSharp/></n-icon>
+                    标签
+                </div>
+                <div class="nav-item" @click="classify">
+                    <n-icon size="18"class="icon-maximize"><BookmarkSharp/></n-icon>
+                    分类
+                </div>
+                <div class="nav-item" @click="file">
+                    <n-icon size="18"class="icon-maximize"><ArchiveSharp/></n-icon>
+                    归档
+                </div>
+                <div class="nav-item" @click="about">
+                    <n-icon size="18"class="icon-maximize"><PersonCircleSharp/></n-icon>
+                    关于
+                </div>
+                <div class="nav-item" @click="dashboard">
+                    <n-icon size="18"class="icon-maximize"><LogInSharp/></n-icon>
+                    后台
+                </div>
             </nav>
     </header>
 
@@ -40,8 +58,11 @@
 
 
     <div class="container" >
-        <div ></div>
-        <div class="con-title">愿新的一年里我们都能更好地爱自己</div>
+        
+        <div class="con-title">
+            <n-icon size="26"class="icon-maximize"><BulbOutline/></n-icon>
+            愿新的一年里我们都能更好地爱自己
+        </div>
         <div class="con-text">
             在新的一年里，不知你会有怎样的计划和愿景。是学业上更上一层楼，是事业上开疆拓土，亦或是在平凡而温暖的生活里感受爱与被爱？
             不论你是谁，处在什么样的人生阶段，想要获得什么，但至少有一件事我想或许对于你与我或其他任何人都是相通的，那就是学会爱自己。
@@ -55,10 +76,13 @@
             己应当同样地对待我们。爱自己，或许会成为我们与人交往最大的底气，当得不到足够的接纳与尊重时，我们转身还会有一个自己。张开
             双臂去拥抱和关爱我们内心的小孩，使我们真正有拒绝和离开的勇气。愿新的一年里我们都能更好地爱自己。
         </div>
-        <div class="con-title" style="margin-top:30px">推荐文章</div>
+        <div class="con-title" style="margin-top:30px">
+            <n-icon size="26"class="icon-maximize"><ThumbsUpOutline/></n-icon>
+            推荐文章
+        </div>
 
         <!--文章列表-->
-            <div v-for="(blog, index) in blogListInfo" style="margin-bottom:15px;cursor: pointer;">
+            <div v-for="(blog) in blogListInfo" style="margin-bottom:15px;cursor: pointer;">
                 <n-card :title="blog.title" @click="toDetail(blog)">
                     <div v-html="blog.content"></div>
 
@@ -85,18 +109,16 @@
 
 <script setup>
 import { ref, reactive, inject, onMounted, computed, onUnmounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-
+import { useRouter } from 'vue-router'
+// 各种小图标的实现
+import { LogoGithub,ArrowDownCircle } from '@vicons/ionicons5'
+import { HomeSharp,PricetagsSharp,BookmarkSharp,ArchiveSharp,PersonCircleSharp,LogInSharp } from '@vicons/ionicons5'
+import { BulbOutline,ThumbsUpOutline } from '@vicons/ionicons5'
 // 路由
 const router = useRouter()
-const route = useRoute()
 
-const message = inject("message")
-const dialog = inject("dialog")
 const axios = inject("axios")
 
-// 选中的分类
-const selectedCategory = ref(0)
 // 分类选项
 const categortyOptions = ref([])
 // 文章列表
@@ -208,6 +230,9 @@ function startReading() {
     }
 }
 
+
+
+
 </script>
 
 <style lang="scss" scoped>
@@ -271,11 +296,14 @@ function startReading() {
     top: 55%;
     left: 50%;
     transform: translate(-50%, -50%);
+    display: inline-flex; /* 保持按钮内容水平排列，并允许图标和文本在同一行 */
+    align-items: center; /* 垂直居中对齐按钮内的内容 */
+    justify-content: center; 
 }
 
 .cover-btns a {
     margin: 10px 15px;
-    padding: 20px 40px;
+    padding: 10px 40px;
     height: 45px;
     line-height: 45px;
     font-size: 1rem;
@@ -285,6 +313,13 @@ function startReading() {
     border-radius: 30px;
     box-shadow: none;
     text-decoration: none;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+}
+
+.icon-maximize{
+    margin-right: 5px;
 }
 
 .search{
