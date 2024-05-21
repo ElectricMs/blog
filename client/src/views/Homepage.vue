@@ -81,20 +81,58 @@
             推荐文章
         </div>
 
-        <!--文章列表-->
-            <div v-for="(blog) in blogListInfo" style="margin-bottom:15px;cursor: pointer;">
-                <n-card :title="blog.title" @click="toDetail(blog)">
-                    <div v-html="blog.content"></div>
+        <div class="articlecard">
+           <div class="card-content">
+                <h3 class="card-title">这是一个标题，而且这个标题比较长</h3>
+                <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam eos,
+                    ex omnis aliquam temporibus assumenda eum modi nobis ad consequuntur a, tempore, 
+                    ab excepturi est quidem laboriosam expedita cum iste?
+                </p>
+           </div>
 
-                    <template #footer>
-                        <n-space align="center">
-                            <div>发布时间：{{ blog.create_time }}</div>
-                        </n-space>
-                    </template>
-                </n-card>
+        </div>
+        <div class="articlecard2">
+            <div class="articlecard3" id="card-left">
+                <div class="card-content">
+                    <h3 class="card-title">这是一个标题，而且这个标题比较长</h3>
+                    <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam eos,
+                        ex omnis aliquam temporibus assumenda eum modi nobis ad consequuntur a, tempore, 
+                        ab excepturi est quidem laboriosam expedita cum iste?
+                    </p>
+                </div>
+
             </div>
+
+            <div class="articlecard3" id="card-right">
+                <div class="card-content">
+                    <h3 class="card-title">这是一个标题，而且这个标题比较长</h3>
+                    <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam eos,
+                        ex omnis aliquam temporibus assumenda eum modi nobis ad consequuntur a, tempore, 
+                        ab excepturi est quidem laboriosam expedita cum iste?
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+
+
+        <!--文章列表-->
+        <div v-for="(blog) in blogListInfo" >
+            <n-card :title="blog.title" @click="toDetail(blog)">
+                    
+
+                <div v-html="blog.content"></div>
+
+                <template #footer>
+                    <n-space align="center">
+                        <div>发布时间：{{ blog.create_time }}</div>
+                    </n-space>
+                </template>
+            </n-card>
+        </div>
             <!--分页-->
-            <n-pagination @update:page="loadBlogs" v-model:page="pageInfo.page" :page-count="pageInfo.pageCount" />
+        <n-pagination @update:page="loadBlogs" v-model:page="pageInfo.page" :page-count="pageInfo.pageCount" />
 
         <n-divider />
         
@@ -203,10 +241,10 @@ const classify = () => {
 }
 
 
-
+//实现导航栏在网页最上方和向下滚动时的不同效果
 const navBar = ref('navbar');
 
-onMounted(() => {//实现导航栏在网页最上方和向下滚动时的不同效果
+onMounted(() => {
   const handleScroll = () => {
     const scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;//适配不同浏览器
     navBar.value.style.background = scrollTop > 0 ? 'linear-gradient(to right, #ffb6c1, #b3ebeb)' : 'transparent';
@@ -229,8 +267,6 @@ function startReading() {
         console.error('未找到ID为 "startReading" 的元素');
     }
 }
-
-
 
 
 </script>
@@ -416,6 +452,112 @@ function startReading() {
     width:68%;
     color:#85929e;
     font-size:18px;
+}
+
+.articlecard{
+    background-image: url("../medias/articlebackground/9.jpg");
+    width: 95%;
+    height: 280px;
+    margin:0 auto;
+    margin-bottom: 30px;
+    background-size: cover; /* 图片将被缩放以适应内容区域，保持原图宽高比且填充整个容器 */
+    background-position: center center; 
+    background-repeat: no-repeat; 
+    border-radius: 10px;
+    
+    /* 确保articlecard是一个块级元素或者设置了固定/最大宽度，以便子元素能居中 */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 使子元素在主轴上居中，对于column方向就是垂直居中 */
+    justify-content: center; /* 可选，如果希望内容也垂直居中的话 */
+    text-align: center; /* 用于内部文本元素的水平居中 */
+}
+
+.card-content{
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 使子元素在主轴上居中，对于column方向就是垂直居中 */
+    justify-content: center; /* 可选，如果希望内容也垂直居中的话 */
+    text-align: center; /* 用于内部文本元素的水平居中 */
+    filter: brightness(1);
+}
+
+.card-title{
+    margin-top:0px;
+    margin-bottom: 0px;
+    font-size: 1.6rem;
+    font-weight: bold;
+    line-height: 1.7rem;
+    color: white;
+    max-width: 60%;
+}
+
+.card-text{
+    color: white;
+    margin-top:30px;
+    max-width: 70%;
+}
+
+.articlecard2{
+    width: 95%;
+    height: 280px;
+    margin:0 auto;
+    margin-bottom: 30px;
+    margin-top: 30px;
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.articlecard3{
+    width: 49%;
+    height: 280px;
+    margin:0 0;
+    margin-bottom: 30px;
+    background-size: cover; /* 图片将被缩放以适应内容区域，保持原图宽高比且填充整个容器 */
+    background-position: center center; 
+    background-repeat: no-repeat; 
+    border-radius: 10px;
+    z-index: 0;
+    position: relative; 
+    /* 确保articlecard是一个块级元素或者设置了固定/最大宽度，以便子元素能居中 */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 使子元素在主轴上居中，对于column方向就是垂直居中 */
+    justify-content: center; /* 可选，如果希望内容也垂直居中的话 */
+    text-align: center; /* 用于内部文本元素的水平居中 */
+}
+
+#card-left::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    background-image: url('../medias/articlebackground/68.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    filter: brightness(0.8);
+    z-index: -1;
+}
+
+#card-right::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    background-image: url('../medias/articlebackground/25.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    filter: brightness(0.8);
+    z-index: -1;
 }
 
 .footer {
