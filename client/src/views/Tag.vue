@@ -662,7 +662,7 @@ a{
 }
 .bestsellers-container {
       height: 18.56rem;
-      background: #f0f0f0;
+      background: white;
    
       #charts-content {
         /* 需要设置宽高后才会显示 */
