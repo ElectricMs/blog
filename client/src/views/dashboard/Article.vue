@@ -32,6 +32,9 @@
                 <n-form-item label="分类">
                     <n-select v-model:value="addArticle.categoryId" :options="categortyOptions" />
                 </n-form-item>
+                <n-form-item label="标签">
+                    <n-dynamic-tags v-model:value="addArticleTags" :max="5" />
+                </n-form-item>
                 <n-form-item label="内容">
                     <rich-text-editor v-model="addArticle.content"></rich-text-editor>
                 </n-form-item>
@@ -48,6 +51,9 @@
                 </n-form-item>
                 <n-form-item label="分类">
                     <n-select v-model:value="updateArticle.categoryId" :options="categortyOptions" />
+                </n-form-item>
+                <n-form-item label="标签">
+                    <n-dynamic-tags v-model:value="updateArticleTags" :max="5" />
                 </n-form-item>
                 <n-form-item label="内容">
                     <rich-text-editor v-model="updateArticle.content"></rich-text-editor>
@@ -82,6 +88,8 @@ const addArticle = reactive({
     content: "",
 })
 
+const addArticleTags=ref([])
+
 //文章修改数据
 const updateArticle = reactive({
     id: 0,
@@ -89,6 +97,8 @@ const updateArticle = reactive({
     title: "",
     content: "",
 })
+
+const updateArticleTags= ref([])
 
 //分类选项
 const categortyOptions = ref([])
@@ -141,15 +151,34 @@ const loadCategorys = async () => {
 
 const add = async () => {
     let res = await axios.post("/blog/_token/add", addArticle)
+    let newId=null
     if (res.data.code == 200) {
         message.info(res.data.msg)
         addArticle.categoryId=null
         addArticle.content=""
         addArticle.title=""
-        loadBlogs()
+        newId = res.data.data.id; // 从响应中提取id
     } else {
         message.error(res.data.msg)
     }
+
+    for (const tagName of addArticleTags.value) {
+        try {
+            console.log(newId)
+            const response = await axios.post('/tags/_token/add', { id:newId, name: tagName });
+            if (response.data.code === 200) {
+                console.log(`标签 "${tagName}" 添加成功`);
+                //message.info(response.data.msg)
+            } else {
+                console.error(`标签 "${tagName}" 添加失败`);
+            }
+        } catch (error) {
+            console.error(`请求错误: ${error.message}`);
+        }
+    }
+
+    updateArticleTags.value = []; // 清空updateArticleTags的值
+    loadBlogs()
 }
 
 //点击事件
@@ -167,27 +196,80 @@ const toUpdate = async (blog) => {
     updateArticle.title = res.data.rows[0].title
     updateArticle.content = res.data.rows[0].content
     updateArticle.categoryId = res.data.rows[0].category_id
+
+    try {
+        let res2 = await axios.get(`/tags/queryname?id=${blog.id}`);
+        if (res2.data.code === 200) {
+        // 从响应数据中提取name属性，映射到新数组
+        const tags = res2.data.rows.map(row => row.name);
+        updateArticleTags.value = tags; // 将提取的标签名数组赋值给updateArticleTags
+        } else {
+        console.error(res2.data.msg);
+        }
+    } catch (error) {
+    console.error('获取标签时出现错误：', error);
+    }
+    console.log(updateArticleTags.value)
+
 }
 
 const update = async () => {//文章管理里的修改按钮操作
     let res = await axios.put("/blog/_token/update", updateArticle)
     if (res.data.code == 200) {
         message.info(res.data.msg)
-        loadBlogs()
         tabValue.value = "list"
     } else {
         message.error(res.data.msg)
     }
-}
 
-const toDelete = async (blog) => {//文章管理里的删除按钮操作
-    let res = await axios.delete("/blog/_token/delete?id="+blog.id)
-    if (res.data.code == 200) {
-        message.info(res.data.msg)
-        loadBlogs()
+    let res2 = await axios.delete(`/tags/_token/delete?id=${updateArticle.id}`)//模板写法
+    if (res2.data.code == 200) {
+        console.log("标签删除成功")
     } else {
         message.error(res.data.msg)
     }
+
+    for (const tagName of updateArticleTags.value) {
+        try {
+        const response = await axios.post('/tags/_token/add', { id:updateArticle.id, name: tagName });
+        if (response.data.code === 200) {
+            console.log(`标签 "${tagName}" 添加成功`);
+            //message.info(response.data.msg)
+        } else {
+            console.error(`标签 "${tagName}" 添加失败`);
+        }
+        } catch (error) {
+        console.error(`请求错误: ${error.message}`);
+        }
+    }
+
+    loadBlogs()
+}
+
+const toDelete = async (blog) => {//文章管理里的删除按钮操作
+    
+    const blogTitle = blog.title; 
+    dialog.warning({
+        title: '警告',
+        content: `你确定要删除 ${blogTitle} 吗?`, 
+        positiveText: '确定',
+        negativeText: '取消',
+        onPositiveClick: async () => {
+            let res = await axios.delete("/blog/_token/delete?id="+blog.id)
+            if (res.data.code == 200) {
+                message.info(res.data.msg)
+                let res2 = await axios.delete("/tags/_token/delete?id="+blog.id)
+                if (res2.data.code == 200) {
+                    loadBlogs()
+                } else {
+                    message.error(res2.data.msg)
+                }
+            } else {
+                message.error(res.data.msg)
+            }
+        },
+        onNegativeClick: () => { }
+  })
 }
 
 </script>

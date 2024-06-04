@@ -165,7 +165,8 @@ router.post("/_token/add", async (req, res) => {//  /_token/add
     if (err == null) {
         res.send({
             code: 200,
-            msg: "添加成功"
+            msg: "添加成功",
+            data: { id: id } //返回创建的文章id给前端
         })
     } else {
         res.send({
