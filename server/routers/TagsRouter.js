@@ -3,11 +3,28 @@ const router = express.Router()
 const { db, genid } = require("../db/DbUtils")
 //table tags
 //id bigint
-//tag varchar100
+//name varchar100
 
 // 列表接口
 router.get("/list", async (req, res) => {
     const search_sql = "SELECT * FROM `tags`"
+    let { err, rows } = await db.async.all(search_sql, [])
+    if (err == null) {
+        res.send({
+            code: 200,
+            msg: "查询Tags成功",
+            rows 
+        })
+    } else {
+        res.send({
+            code: 500,
+            msg: "查询Tags失败"
+        })
+    }
+})
+
+router.get("/listname", async (req, res) => {
+    const search_sql = "SELECT `name`, COUNT(`id`) AS count_id FROM `tags` GROUP BY `name`"
     let { err, rows } = await db.async.all(search_sql, [])
     if (err == null) {
         res.send({

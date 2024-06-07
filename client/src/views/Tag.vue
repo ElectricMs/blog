@@ -57,6 +57,18 @@
             文章标签
         </div>
         <div class="tag-chips">
+            <div v-for="(tag, index) in tagListInfo" style="margin-bottom:15px">
+                
+                <a href="/tags/%E7%A2%B0%E6%92%9E%E6%A3%80%E6%B5%8B/" title="碰撞检测: 1">
+                    <span class="chip waves-effect
+                             chip-default chip-hover " data-tagname="碰撞检测" style="background-color: #F9EBEA;">{{ tag.name }}
+                        <span class="tag-length">{{ tag.count_id }}</span>
+                    </span>
+                </a>
+
+            </div>
+
+
             <a href="/tags/%E7%A2%B0%E6%92%9E%E6%A3%80%E6%B5%8B/" title="碰撞检测: 1">
                     <span class="chip waves-effect
                              chip-default chip-hover " data-tagname="碰撞检测" style="background-color: #F9EBEA;">碰撞检测
@@ -153,6 +165,9 @@ const categortyOptions = ref([])
 // 文章列表
 const blogListInfo = ref([])
 
+
+const tagListInfo=ref([])
+
 // 查询和分页数据
 const pageInfo = reactive({
     page: 1,
@@ -166,6 +181,7 @@ const pageInfo = reactive({
 onMounted(() => {
     loadCategorys();
     loadBlogs()
+    loadTags()
 })
 
 //获取博客列表
@@ -199,6 +215,13 @@ const loadCategorys = async () => {
         }
     })
     console.log(categortyOptions.value)
+}
+
+const loadTags = async () => {
+    let res = await axios.get("/tags/listname")
+    const tags = res.data.rows;
+    tagListInfo.value = tags; // 将提取的标签名数组赋值给updateArticleTags
+    console.log(tagListInfo.value)
 }
 
 //页面跳转
