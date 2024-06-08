@@ -76,8 +76,12 @@
     <div class="container2">
         
         <div class="bestsellers-container">
-            <chart-word-cloud :options="state.chartOptions"></chart-word-cloud>
+            <chart-word-cloud :options="state.chartOptions":key="tagKey"></chart-word-cloud>
         </div>
+
+        <n-button class="chip waves-effect " style="background-color: #F9EBEA;" @click="testtag">Test
+                    <span class="tag-length">1</span>
+        </n-button>
         
     </div>
 
@@ -106,23 +110,27 @@ const router = useRouter()
 
 const axios = inject("axios")
 
-// 分类选项
-const categortyOptions = ref([])
-// 文章列表
-const blogListInfo = ref([])
+
 
 
 const tagListInfo=ref([])
 
-// 查询和分页数据
-const pageInfo = reactive({
-    page: 1,
-    pageSize: 3,
-    pageCount: 0,
-    count: 0,
-    keyword: "",
-    categoryId:0,
-})
+
+
+const state = reactive({
+  chartOptions: {
+    series: [
+      {
+        gridSize: 5,
+        data: []
+      },
+    ],
+  },
+});
+
+const tagKey=ref(0);
+
+
 
 
 const loadTags = async () => {
@@ -130,56 +138,33 @@ const loadTags = async () => {
         let res = await axios("/tags/listname"); // 使用 await 等待 axios 请求完成
         const tags = res.data.rows;
         tagListInfo.value = tags; // 将提取的标签名数组赋值给 updateArticleTags
-        console.log(tagListInfo.value);
+
+
+
+
+        state.chartOptions.series[0].data = tagListInfo.value.map(tag => ({ name: tag.name, value: tag.count_id }));
+        console.log(state.chartOptions.series[0].data)
+        
+        tagKey.value += 1;
     } catch (error) {
         console.error("Error loading tags:", error);
     }
 };
 
-// // 调用 loadTags 函数，并使用 await 等待其执行完成
-// (async () => {
-//     await loadTags();
-//     // 这里可以放置需要在 loadTags 执行完成后立即执行的代码
-// })();
-
 onMounted(() => {
-    loadCategorys();
-    loadBlogs()
+
     loadTags();
 })
 
-//获取博客列表
-const loadBlogs = async (page = 0) => {
-    if (page != 0) {
-        pageInfo.page = page;
-    }
-    let res = await axios.get(`/blog/search?keyword=${pageInfo.keyword}&page=${pageInfo.page}&pageSize=${pageInfo.pageSize}&categoryId=${pageInfo.categoryId}`)
-    let temp_rows = res.data.data.rows;
-    // 处理获取的文章列表数据
-    for (let row of temp_rows) {
-        row.content += "..."
-        // 把时间戳转换为年月日
-        let d = new Date(row.create_time)
-        row.create_time = `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`
-    }
-    blogListInfo.value = temp_rows;
-    pageInfo.count = res.data.data.count;
-    //计算分页大小
-    pageInfo.pageCount = parseInt(pageInfo.count / pageInfo.pageSize) + (pageInfo.count % pageInfo.pageSize > 0 ? 1 : 0)
-    console.log(res)
+const testtag = ()=>{
+    console.log(tagListInfo)
+    console.log(tagListInfo.value)
+    console.log(state.chartOptions.series[0].data)
+
+    console.log(state)
+    
 }
 
-//获取分类列表
-const loadCategorys = async () => {
-    let res = await axios.get("/category/list")
-    categortyOptions.value = res.data.rows.map((item) => {
-        return {
-            label: item.name,
-            value: item.id
-        }
-    })
-    console.log(categortyOptions.value)
-}
 
 
 
@@ -273,24 +258,16 @@ function startReading() {
 //         ],
 //       },
 //     })
-if (Array.isArray(tagListInfo.value)) {
-  console.log("tagListInfo.value 是一个数组");
-//   await loadTags();这句加上就白屏了
-  console.log(tagListInfo.value);//因为后面在const state要用tagListInfo.value，我就控制台输出检查一下tagListInfo.value，结果是空数组。
-} else {
-  console.log("tagListInfo.value 不是一个数组");
-}
+// if (Array.isArray(tagListInfo.value)) {
+//   console.log("tagListInfo.value 是一个数组");
+// //   await loadTags();这句加上就白屏了
+//     console.log(tagListInfo)
+//   console.log(tagListInfo.value);//因为后面在const state要用tagListInfo.value，我就控制台输出检查一下tagListInfo.value，结果是空数组。
+// } else {
+//   console.log("tagListInfo.value 不是一个数组");
+// }
 
-const state = reactive({
-  chartOptions: {
-    series: [
-      {
-        gridSize: 20,
-        data: tagListInfo.value.map(tag => ({ name: tag.name, value: tag.count_id })),//词云图调用tagListInfo.value
-      },
-    ],
-  },
-});
+
 
 </script>
 
