@@ -23,15 +23,6 @@ const { message, notification, dialog } = createDiscreteApi(['message', 'dialog'
 
 
 
-// import Vue from 'vue'
-// //导入 dialogBox 和Test 两个组件
-// import RadioImg2 from './views/radioimg2.vue';
-
-// Vue.component('radioimg2', RadioImg2)
-
-
-
-
 
 
 const app = createApp(App)

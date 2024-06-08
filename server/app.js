@@ -61,6 +61,7 @@ app.use("/admin",require("./routers/AdminRouter"))
 app.use("/category",require("./routers/CategoryRouter"))
 app.use("/blog",require("./routers/BlogRouter"))
 app.use("/upload", require("./routers/UploadRouter"))
+app.use("/tags", require("./routers/TagsRouter"))
 
 app.get("/",(req,res)=>{
     res.send("helloworld")

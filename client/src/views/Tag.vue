@@ -57,66 +57,19 @@
             文章标签
         </div>
         <div class="tag-chips">
-            <a href="/tags/%E7%A2%B0%E6%92%9E%E6%A3%80%E6%B5%8B/" title="碰撞检测: 1">
-                    <span class="chip waves-effect
-                             chip-default chip-hover " data-tagname="碰撞检测" style="background-color: #F9EBEA;">碰撞检测
-                        <span class="tag-length">1</span>
-                    </span>
-            </a>
-            <a href="/tags/%E9%9A%90%E5%BC%8F%E8%A1%A8%E7%A4%BA/" title="隐式表示: 19">
-                    <span class="chip waves-effect
-                             chip-default chip-hover" data-tagname="隐式表示" style="background-color: #F5EEF8;">隐式表示
-                        <span class="tag-length">19</span>
-                    </span>
-            </a>
-            <a href="/tags/3D-Gaussian-Splatting/" title="3D Gaussian Splatting: 9">
-                    <span class="chip waves-effect 
-                             chip-default chip-hover" data-tagname="3D Gaussian Splatting" style="background-color: #D5F5E3;">3D Gaussian Splatting
-                        <span class="tag-length">9</span>
-                    </span>
-            </a>
-            <a href="/tags/%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/" title="经验分享: 5">
-                    <span class="chip waves-effect
-                             chip-default chip-hover" data-tagname="经验分享" style="background-color: #E8F8F5;">经验分享
-                        <span class="tag-length">5</span>
-                    </span>
-            </a>
-            <a href="/tags/%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/" title="经验分享: 5">
-                    <span class="chip waves-effect
-                             chip-default chip-hover" data-tagname="经验分享" style="background-color: #E8F8F5;">经验分享
-                        <span class="tag-length">5</span>
-                    </span>
-            </a>
-            <a href="/tags/MAVROS/" title="MAVROS: 1">
-                    <span class="chip waves-effect
-                             chip-default chip-hover" data-tagname="MAVROS" style="background-color: #F8F9F9;">MAVROS
-                        <span class="tag-length">1</span>
-                    </span>
-            </a>
-            <a href="/tags/Gazebo/" title="Gazebo: 1">
-                    <span class="chip waves-effect
-                             chip-default chip-hover" data-tagname="Gazebo" style="background-color: #D7BDE2;">Gazebo
-                        <span class="tag-length">1</span>
-                    </span>
-            </a>
-            <a href="/tags/Gazebo/" title="Gazebo: 1">
-                    <span class="chip waves-effect 
-                             chip-default chip-hover" data-tagname="Gazebo" style="background-color: #D7BDE2;">Gazebo
-                        <span class="tag-length">1</span>
-                    </span>
-            </a>
-            <a href="/tags/PIXHAWK/" title="PIXHAWK: 1">
-                    <span class="chip waves-effect
-                             chip-default chip-hover" data-tagname="PIXHAWK" style="background-color: #A3E4D7;">PIXHAWK
-                        <span class="tag-length">1</span>
-                    </span>
-            </a>
-            <a href="/tags/APM/" title="APM: 1">
-                    <span class="chip waves-effect
-                             " data-tagname="APM" style="background-color: #85C1E9;">APM
-                        <span class="tag-length">1</span>
-                    </span>
-            </a>
+            <div class="item" v-for="(tag, index) in tagListInfo" >
+                
+               
+
+                
+                <n-button class="chip waves-effect " style="background-color: #F9EBEA;">{{ tag.name }}
+                    <span class="tag-length">{{ tag.count_id }}</span>
+                </n-button>
+               
+                
+                
+
+            </div>
         </div>
      
     </div>
@@ -143,7 +96,12 @@ import { useRouter } from 'vue-router'
 import { LogoGithub,ArrowDownCircle, AlbumsOutline, AlbumsSharp } from '@vicons/ionicons5'
 import { HomeSharp,PricetagsSharp,BookmarkSharp,ArchiveSharp,PersonCircleSharp,LogInSharp } from '@vicons/ionicons5'
 import { BulbOutline,ThumbsUpOutline } from '@vicons/ionicons5'
+import { onBeforeMount } from 'vue';
+
+
+
 // 路由
+
 const router = useRouter()
 
 const axios = inject("axios")
@@ -152,6 +110,9 @@ const axios = inject("axios")
 const categortyOptions = ref([])
 // 文章列表
 const blogListInfo = ref([])
+
+
+const tagListInfo=ref([])
 
 // 查询和分页数据
 const pageInfo = reactive({
@@ -163,9 +124,28 @@ const pageInfo = reactive({
     categoryId:0,
 })
 
+
+const loadTags = async () => {
+    try {
+        let res = await axios("/tags/listname"); // 使用 await 等待 axios 请求完成
+        const tags = res.data.rows;
+        tagListInfo.value = tags; // 将提取的标签名数组赋值给 updateArticleTags
+        console.log(tagListInfo.value);
+    } catch (error) {
+        console.error("Error loading tags:", error);
+    }
+};
+
+// // 调用 loadTags 函数，并使用 await 等待其执行完成
+// (async () => {
+//     await loadTags();
+//     // 这里可以放置需要在 loadTags 执行完成后立即执行的代码
+// })();
+
 onMounted(() => {
     loadCategorys();
     loadBlogs()
+    loadTags();
 })
 
 //获取博客列表
@@ -200,6 +180,8 @@ const loadCategorys = async () => {
     })
     console.log(categortyOptions.value)
 }
+
+
 
 //页面跳转
 const toDetail = (blog)=>{
@@ -242,7 +224,7 @@ onMounted(() => {
     const scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;//适配不同浏览器
     navBar.value.style.background = scrollTop > 0 ? 'linear-gradient(to right, #ffb6c1, #b3ebeb)' : 'transparent';
     navBar.value.style.boxShadow = scrollTop > 0 ? '0px 4px 15px rgba(0, 0, 0, 0.3)' : '0px 0px 0px rgba(0, 0, 0, 0)';
-
+    
   };
 
   window.addEventListener('scroll', handleScroll);
@@ -261,37 +243,55 @@ function startReading() {
     }
 }
 
+
+// const state = reactive({
+//       chartOptions: {
+//         series: [
+//           {
+//             gridSize: 20,
+//             data: [
+//               {
+//                 name: '标签1',
+//                 value: 30,
+//                 // textStyle: {
+//                 //   color: 'rgba(0, 0, 0, .4)',
+//                 // },
+//               },
+//               {name: '五条悟',value: 30},
+//               { name: '狗卷', value: 28 },
+//               { name: 'Shoto', value: 28 },
+//               { name: 'Vox', value: 25 },
+//               { name: "Aza", value: 23 },
+//               { name: 'Mysta', value: 20 },
+//               { name: 'Uki', value: 18 },
+//               { name: 'Luca', value: 15 },
+//               { name: 'Shu', value: 10 },
+//               { name: 'Ike', value: 10 },
+//               { name: "Fulgun", value: 10 }
+//             ],
+//           },
+//         ],
+//       },
+//     })
+if (Array.isArray(tagListInfo.value)) {
+  console.log("tagListInfo.value 是一个数组");
+//   await loadTags();这句加上就白屏了
+  console.log(tagListInfo.value);//因为后面在const state要用tagListInfo.value，我就控制台输出检查一下tagListInfo.value，结果是空数组。
+} else {
+  console.log("tagListInfo.value 不是一个数组");
+}
+
 const state = reactive({
-      chartOptions: {
-        series: [
-          {
-            gridSize: 20,
-            data: [
-              {
-                name: '娜娜米',
-                value: 30,
-                // textStyle: {
-                //   color: 'rgba(0, 0, 0, .4)',
-                // },
-              },
-              {name: '五条悟',value: 30},
-              { name: '狗卷', value: 28 },
-              { name: 'Shoto', value: 28 },
-              { name: 'Vox', value: 25 },
-              { name: "Aza", value: 23 },
-              { name: 'Mysta', value: 20 },
-              { name: 'Uki', value: 18 },
-              { name: 'Luca', value: 15 },
-              { name: 'Shu', value: 10 },
-              { name: 'Ike', value: 10 },
-              { name: "Fulgun", value: 10 }
-            ],
-          },
-        ],
+  chartOptions: {
+    series: [
+      {
+        gridSize: 20,
+        data: tagListInfo.value.map(tag => ({ name: tag.name, value: tag.count_id })),//词云图调用tagListInfo.value
       },
-    })
-   
-    onMounted(() => {})
+    ],
+  },
+});
+
 </script>
 
 <style lang="scss" scoped>
@@ -465,6 +465,9 @@ const state = reactive({
     box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.3);
 }
 .tag-chips{
+    display:flex;
+    justify-content: center;
+    
     margin: 1rem auto 0.5rem;
     max-width: 850px;
     text-align: center;
@@ -606,12 +609,7 @@ const state = reactive({
     align-items: center;
 
 }
-a{
-    text-decoration: none;
-    color:#34495e;;
-    -webkit-tap-highlight-color: transparent;
-    background-color: transparent;
-}
+
 .tag-length {
     color: #e91e63;
     margin-top: 1px;
@@ -620,6 +618,11 @@ a{
     font-size: 0.5rem;
 }
 .chip{
+    text-decoration: none;
+    color:#34495e;;
+    -webkit-tap-highlight-color: transparent;
+    background-color: transparent;
+
     margin: 10px 10px;
     padding: 19px 14px;
     display: inline-flex;
@@ -634,16 +637,18 @@ a{
 .container .chip:default {
     color: #34495e;
 }
-.chip:active{
-    color: white;
-    box-shadow: 2px 5px 10px #aaa !important;
-    background: linear-gradient(to bottom right, #FF5E3A 0%, #FF2A68 100%) !important;
-}
+
 .chip:hover{
     color: white;
     box-shadow: 2px 5px 10px #aaa !important;
     background: linear-gradient(to bottom right,rgb(113, 206, 113) 0%, rgb(2, 165, 2) 100%) !important
 }
+.chip:active{
+    color: white;
+    box-shadow: 2px 5px 10px #aaa !important;
+    background: linear-gradient(to bottom right, #FF5E3A 0%, #FF2A68 100%) !important;
+}
+
 .waves-effect{
     transition: 0.3s ease-out;
 }
@@ -670,5 +675,8 @@ a{
         height: 100%;
       }
     }
+.item{
+    margin-right:20px;
+}
 
 </style>
