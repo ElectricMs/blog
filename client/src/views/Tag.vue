@@ -78,6 +78,10 @@
         <div class="bestsellers-container">
             <chart-word-cloud :options="state.chartOptions":key="tagKey"></chart-word-cloud>
         </div>
+
+        <n-button class="chip waves-effect " style="background-color: #F9EBEA;" @click="testtag">Test
+                    <span class="tag-length">1</span>
+        </n-button>
         
     </div>
 
@@ -117,7 +121,11 @@ const state = reactive({
   chartOptions: {
     series: [
       {
+<<<<<<< HEAD
         gridSize: 30,
+=======
+        gridSize: 5,
+>>>>>>> 11d742dcc6991bffba1946ccda192b2fb14ad71a
         data: []
       },
     ],
@@ -134,6 +142,13 @@ const loadTags = async () => {
         let res = await axios("/tags/listname"); // 使用 await 等待 axios 请求完成
         const tags = res.data.rows;
         tagListInfo.value = tags; // 将提取的标签名数组赋值给 updateArticleTags
+<<<<<<< HEAD
+=======
+
+
+
+
+>>>>>>> 11d742dcc6991bffba1946ccda192b2fb14ad71a
         state.chartOptions.series[0].data = tagListInfo.value.map(tag => ({ name: tag.name, value: tag.count_id }));
         console.log(state.chartOptions.series[0].data)
         
