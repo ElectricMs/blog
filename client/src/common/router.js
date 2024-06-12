@@ -14,11 +14,10 @@ let routes = [
     { path: "/file", component: () => import("../views/File.vue") },
     { path: "/tag", component: () => import("../views/Tag.vue") },
     { path: "/about", component: () => import("../views/About.vue") },
-<<<<<<< HEAD
+
     { path: "/classify", component: () => import("../views/Classify_new.vue") },
-=======
-    { path: "/classify", component: () => import("../views/Classify.vue") },
->>>>>>> 11d742dcc6991bffba1946ccda192b2fb14ad71a
+
+
     
 ]
 
