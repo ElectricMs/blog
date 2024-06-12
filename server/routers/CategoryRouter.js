@@ -22,6 +22,26 @@ router.get("/list", async (req, res) => {
     }
 
 })
+router.get("/listname", async (req, res) => {
+    const search_sql = "SELECT `category_id`,COUNT(`category_id`) AS count_id FROM `blog` GROUP BY `category_id`"
+
+    let { err, rows } = await db.async.all(search_sql, [])
+
+    if (err == null) {
+        res.send({
+            code: 200,
+            msg: "查询成功",
+            rows //rows:rows
+        })
+    } else {
+        res.send({
+            code: 500,
+            msg: "查询失败"
+        })
+    }
+
+})
+
 
 // 删除接口 /category/_token/delete?id=xxx
 router.delete("/_token/delete", async (req, res) => {
