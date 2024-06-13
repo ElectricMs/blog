@@ -7,7 +7,7 @@
     </div>
     <div class="maintitle">这是一个博客</div>
    
-    <div class="futitle">（标签页）</div>
+    <div class="futitle">（分类页）</div>
 
 
 
@@ -53,34 +53,34 @@
     <div class="container" >
         
         <div class="con-title">
-            <n-icon size="26"class="icon-maximize"><AlbumsSharp/></n-icon>
-            文章标签
+            <n-icon size="26"class="icon-maximize"><Bookmark/></n-icon>
+            文章分类
         </div>
-        <div class="tag-chips">
-            <div class="item" v-for="(tag, index) in tagListInfo" >
-                
-               
-
-                
-                <n-button class="chip waves-effect " style="background-color: #F9EBEA;">{{ tag.name }}
-                    <span class="tag-length">{{ tag.count_id }}</span>
+        <!-- <div>
+                <n-popselect @update:value="searchByCategory" v-model:value="selectedCategory" :options="categortyOptions" trigger="click">
+                    <div>分类<span>{{ categoryName }}</span></div>
+                </n-popselect>
+        </div> -->
+        <div class="cate-chips">
+            <div class="item" v-for="(categorty,index) in categortyOptions">
+                <n-button class="chip waves-effect " style="background-color: #F9EBEA;">{{ categorty.name }}
+                    
                 </n-button>
-               
-                
-                
-
-            </div>
+            </div>   
         </div>
      
     </div>
+
     <div class="container2">
-        
-        <div class="bestsellers-container">
-            <chart-word-cloud :options="state.chartOptions":key="tagKey"></chart-word-cloud>
+        <div class="radio">
+            <p class="tmp">文章分类雷达图</p>
+            <div ref="chart1" style="width: 100%; height: 330px; top: 20px; left: 10%; border: none;"></div>
         </div>
         
+        
+        
     </div>
-
+    
     <div class="footer">
         <div>这是一个页尾</div>
         <div>Power by Vue3 + Vite</div>
@@ -89,77 +89,167 @@
 </template>
 
 <script setup>
-import ChartWordCloud from './ChartWordCloud.vue'
+
+import { watch } from 'vue';
+import * as echarts from 'echarts';
+
 import { ref, reactive, inject, onMounted, computed, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 // 各种小图标的实现
-import { LogoGithub,ArrowDownCircle, AlbumsOutline, AlbumsSharp } from '@vicons/ionicons5'
+import { LogoGithub,ArrowDownCircle, AlbumsOutline, AlbumsSharp, Bookmark } from '@vicons/ionicons5'
 import { HomeSharp,PricetagsSharp,BookmarkSharp,ArchiveSharp,PersonCircleSharp,LogInSharp } from '@vicons/ionicons5'
 import { BulbOutline,ThumbsUpOutline } from '@vicons/ionicons5'
-import { onBeforeMount } from 'vue';
-
-
-
 // 路由
-
 const router = useRouter()
 
 const axios = inject("axios")
+// 选中的分类
+const selectedCategory = ref(0)
+// 分类选项
+const categortyOptions = ref([])
+// 文章列表
+const blogListInfo = ref([])
 
-
-
-
-const tagListInfo=ref([])
-
-
-
-const state = reactive({
-  chartOptions: {
-    series: [
-      {
-        gridSize: 30,
-        data: []
-      },
-    ],
-  },
+const option = ref({
+    backgroundColor: 'rgba(255,255,255,1 )',         // 背景色，默认无背景	rgba(51,255,255,0.7)
+	    radar: [{                       // 雷达图坐标系组件，只适用于雷达图。
+	        center: ['50%', '50%'],             // 圆中心坐标，数组的第一项是横坐标，第二项是纵坐标。[ default: ['50%', '50%'] ]
+	        radius: 120,                        // 圆的半径，数组的第一项是内半径，第二项是外半径。
+	        startAngle: 90,                     // 坐标系起始角度，也就是第一个指示器轴的角度。[ default: 90 ]
+	        name: {                             // (圆外的标签)雷达图每个指示器名称的配置项。
+	            formatter: '{value}',
+	            textStyle: {
+	                fontSize: 15,
+	                color: '#000'
+	            }
+	        },
+	        nameGap: 15,                        // 指示器名称和指示器轴的距离。[ default: 15 ]
+	        splitNumber: 5,                     // (这里是圆的环数)指示器轴的分割段数。[ default: 5 ]
+	        shape: 'polygon',                    // 雷达图绘制类型，支持 'polygon'(多边形) 和 'circle'(圆)。[ default: 'polygon' ]
+	        axisLine: {                         // (圆内的几条直线)坐标轴轴线相关设置
+	            lineStyle: {
+	                color: 'rgb(192,192,192)',                   // 坐标轴线线的颜色。
+	                width: 2,                      	 // 坐标轴线线宽。
+	                type: 'solid',                   // 坐标轴线线的类型。
+	            }
+	        },
+	        splitLine: {                        // (这里是指所有圆环)坐标轴在 grid 区域中的分隔线。
+	            lineStyle: {
+	                color: 'rgb(192,192,192)',                       // 分隔线颜色
+	                width: 2, 							 // 分隔线线宽
+	            }
+	        },
+	        splitArea: {                        // 坐标轴在 grid 区域中的分隔区域，默认不显示。
+	            show: true,
+	            areaStyle: {                            // 分隔区域的样式设置。
+	                color: ['rgba(255,255,255,1)','rgba(220,220,220,1)'],       // 分隔区域颜色。分隔区域会按数组中颜色的顺序依次循环设置颜色。默认是一个深浅的间隔色。
+	            }
+	        },
+	        indicator:[]
+	    }],
+	    series: [{
+	        name: '雷达图',             // 系列名称,用于tooltip的显示，legend 的图例筛选，在 setOption 更新数据和配置项时用于指定对应的系列。
+	        type: 'radar',              // 系列类型: 雷达图
+	        itemStyle: {                // 折线拐点标志的样式。
+	            normal: {                   // 普通状态时的样式
+	                lineStyle: {
+	                    width: 2,
+                        color: '#32CD32'
+	                },
+	                opacity: 0.2
+	            },
+	            emphasis: {                 // 高亮时的样式
+	                lineStyle: {
+	                    width: 5
+	                },
+	                opacity: 1
+	            }
+	        },
+	       
+            data: [{ 
+	            
+	            value:[],
+	            symbol: 'circle',
+	            symbolSize: 6,
+	            label: {                        
+	                    normal: {  
+	                        show: true,
+	                        position: 'top',
+	                        distance: 5,
+	                        color: 'rgba(0,0,0,1)',
+	                        fontSize: 15,
+	                        formatter:function(params) {  
+	                            return params.value;  
+	                        }  
+	                    }  
+	                },
+	            itemStyle: {
+	                normal: {
+	                    borderColor: 'rgba(0,255,127,1)',
+	                    borderWidth: 3,
+	                }
+	            },
+	            areaStyle: {
+	                normal: {
+	                    color: 'rgba(0,255,127,0.7)'
+	                }
+	            }
+	        }]
+	    }, ]
 });
 
-const tagKey=ref(0);
-
-
-
-
-const loadTags = async () => {
-    try {
-        let res = await axios("/tags/listname"); // 使用 await 等待 axios 请求完成
-        const tags = res.data.rows;
-        tagListInfo.value = tags; // 将提取的标签名数组赋值给 updateArticleTags
-        state.chartOptions.series[0].data = tagListInfo.value.map(tag => ({ name: tag.name, value: tag.count_id }));
-        console.log(state.chartOptions.series[0].data)
-        
-        tagKey.value += 1;
-    } catch (error) {
-        console.error("Error loading tags:", error);
-    }
-};
-
-onMounted(() => {
-
-    loadTags();
-})
-
-const testtag = ()=>{
-    console.log(tagListInfo)
-    console.log(tagListInfo.value)
-    console.log(state.chartOptions.series[0].data)
-
-    console.log(state)
+const categortynumber = ref([]);
+const loadCategorys = async () => {
+    let res = await axios.get("/category/list")
+    categortyOptions.value = res.data.rows;
+    console.log(categortyOptions.value)
+   
+    
+    option.value.radar[0].indicator=categortyOptions.value.map(item=>{
+    
+        return{
+        name:item.name,
+        max:7
+        };
+    });
+    let res1=await axios.get("/category/listname")
+    categortynumber.value = res1.data.rows;
+    console.log(categortynumber.value)
+    option.value.series[0].data[0].value = categortynumber.value.map(item => item.count_id);
+    
+    console.log(option.value.radar[0].indicator)
+    console.log(option.value.series[0].data[0].value)
     
 }
 
+const chart1 = ref(null);
+onMounted(async () => {
+    await loadCategorys();
+    console.log(option.value);
+    chart1.value = echarts.init(chart1.value);
+    chart1.value.setOption(option.value);
+})
 
 
 
+
+watch(option, (newVal) => {
+  chart1.value.setOption(newVal);
+});
+onUnmounted(() => {
+  if (chart1.value !== null) {
+    chart1.value.dispose();
+  }
+});
+
+
+
+
+//选中分类
+const searchByCategory = (categoryId)=>{
+    pageInfo.categoryId = categoryId ;
+    loadBlogs()
+}
 //页面跳转
 const toDetail = (blog)=>{
     router.push({path:"/detail",query:{id:blog.id}})//返回时携带文章id
@@ -191,6 +281,45 @@ const dashboard = () => {
 const classify = () => {
     router.push("/classify")
 }
+// 查询和分页数据
+const pageInfo = reactive({
+    page: 1,
+    pageSize: 3,
+    pageCount: 0,
+    count: 0,
+    keyword: "",
+    categoryId:0,
+})
+
+
+
+//获取博客列表
+const loadBlogs = async (page = 0) => {
+    if (page != 0) {
+        pageInfo.page = page;
+    }
+    let res = await axios.get(`/blog/search?keyword=${pageInfo.keyword}&page=${pageInfo.page}&pageSize=${pageInfo.pageSize}&categoryId=${pageInfo.categoryId}`)
+    let temp_rows = res.data.data.rows;
+    // 处理获取的文章列表数据
+    for (let row of temp_rows) {
+        row.content += "..."
+        // 把时间戳转换为年月日
+        let d = new Date(row.create_time)
+        row.create_time = `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`
+    }
+    blogListInfo.value = temp_rows;
+    pageInfo.count = res.data.data.count;
+    //计算分页大小
+    pageInfo.pageCount = parseInt(pageInfo.count / pageInfo.pageSize) + (pageInfo.count % pageInfo.pageSize > 0 ? 1 : 0)
+    console.log(res)
+}
+const categoryName = computed(() => {
+    //获取选中的分类 find
+    let selectedOption = categortyOptions.value.find((option) => { return option.value == selectedCategory.value })
+    //返回分类的名称 如果找的到的话
+    return selectedOption ? selectedOption.label : ""
+})
+
 
 
 //实现导航栏在网页最上方和向下滚动时的不同效果
@@ -201,7 +330,7 @@ onMounted(() => {
     const scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;//适配不同浏览器
     navBar.value.style.background = scrollTop > 0 ? 'linear-gradient(to right, #ffb6c1, #b3ebeb)' : 'transparent';
     navBar.value.style.boxShadow = scrollTop > 0 ? '0px 4px 15px rgba(0, 0, 0, 0.3)' : '0px 0px 0px rgba(0, 0, 0, 0)';
-    
+
   };
 
   window.addEventListener('scroll', handleScroll);
@@ -219,46 +348,6 @@ function startReading() {
         console.error('未找到ID为 "startReading" 的元素');
     }
 }
-
-
-// const state = reactive({
-//       chartOptions: {
-//         series: [
-//           {
-//             gridSize: 20,
-//             data: [
-//               {
-//                 name: '标签1',
-//                 value: 30,
-//                 // textStyle: {
-//                 //   color: 'rgba(0, 0, 0, .4)',
-//                 // },
-//               },
-//               {name: '五条悟',value: 30},
-//               { name: '狗卷', value: 28 },
-//               { name: 'Shoto', value: 28 },
-//               { name: 'Vox', value: 25 },
-//               { name: "Aza", value: 23 },
-//               { name: 'Mysta', value: 20 },
-//               { name: 'Uki', value: 18 },
-//               { name: 'Luca', value: 15 },
-//               { name: 'Shu', value: 10 },
-//               { name: 'Ike', value: 10 },
-//               { name: "Fulgun", value: 10 }
-//             ],
-//           },
-//         ],
-//       },
-//     })
-// if (Array.isArray(tagListInfo.value)) {
-//   console.log("tagListInfo.value 是一个数组");
-// //   await loadTags();这句加上就白屏了
-//     console.log(tagListInfo)
-//   console.log(tagListInfo.value);//因为后面在const state要用tagListInfo.value，我就控制台输出检查一下tagListInfo.value，结果是空数组。
-// } else {
-//   console.log("tagListInfo.value 不是一个数组");
-// }
-
 
 
 </script>
@@ -433,10 +522,9 @@ function startReading() {
     border-radius: 20px; 
     box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.3);
 }
-.tag-chips{
+.cate-chips{
     display:flex;
     justify-content: center;
-    
     margin: 1rem auto 0.5rem;
     max-width: 850px;
     text-align: center;
@@ -578,7 +666,12 @@ function startReading() {
     align-items: center;
 
 }
-
+a{
+    text-decoration: none;
+    color:#34495e;;
+    -webkit-tap-highlight-color: transparent;
+    background-color: transparent;
+}
 .tag-length {
     color: #e91e63;
     margin-top: 1px;
@@ -587,11 +680,6 @@ function startReading() {
     font-size: 0.5rem;
 }
 .chip{
-    text-decoration: none;
-    color:#34495e;;
-    -webkit-tap-highlight-color: transparent;
-    background-color: transparent;
-
     margin: 10px 10px;
     padding: 19px 14px;
     display: inline-flex;
@@ -606,18 +694,16 @@ function startReading() {
 .container .chip:default {
     color: #34495e;
 }
-
-.chip:hover{
-    color: white;
-    box-shadow: 2px 5px 10px #aaa !important;
-    background: linear-gradient(to bottom right,rgb(113, 206, 113) 0%, rgb(2, 165, 2) 100%) !important
-}
 .chip:active{
     color: white;
     box-shadow: 2px 5px 10px #aaa !important;
     background: linear-gradient(to bottom right, #FF5E3A 0%, #FF2A68 100%) !important;
 }
-
+.chip:hover{
+    color: white;
+    box-shadow: 2px 5px 10px #aaa !important;
+    background: linear-gradient(to bottom right,rgb(113, 206, 113) 0%, rgb(2, 165, 2) 100%) !important
+}
 .waves-effect{
     transition: 0.3s ease-out;
 }
@@ -634,18 +720,22 @@ function startReading() {
     box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.3);
 
 }
-.bestsellers-container {
-      height: 18.56rem;
-      background: white;
-   
-      #charts-content {
-        /* 需要设置宽高后才会显示 */
-        width: 100%;
-        height: 100%;
-      }
-    }
+.radio{
+    text-align:center;
+    color:#34495e;
+    margin-bottom: 20px;
+    border-top:20px;
+    font-size: 1.5rem;
+}
 .item{
     margin-right:20px;
 }
 
+// #chart1 {
+//   position: relative; /* 绝对定位 */
+//   top: 10px;        /* 从顶部向下移动100px */
+//   left: 20%;         /* 从左边向右移动20% */
+//   width: 80%;        /* 宽度为80% */
+//   height: 400px;     /* 高度为400px */
+// }
 </style>
