@@ -209,7 +209,7 @@ const loadCategorys = async () => {
     
         return{
         name:item.name,
-        max:7
+        max:10
         };
     });
     let res1=await axios.get("/category/listname")
