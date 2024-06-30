@@ -5,17 +5,14 @@
         <img class="frontimg" src="../medias/4.jpg" alt="Front Image" >
         <div class="bottom-div" id="startReading"></div><!--定位用 无内容-->
     </div>
-    <div class="maintitle">这是一个博客</div>
+    <div class="maintitle">克服己身，叫身服我</div>
    
-    <div class="futitle">（分类页）</div>
-
-
 
     <!--导航栏-->
     <header class="navbar" ref="navBar">
             <div class="left-section">
                 <img src="../medias/logo.png" alt="Logo" class="navbar-logo" @click="homePage"/>
-                <p  @click="homePage">这是一个博客</p>
+                <p  @click="homePage">所念皆星河</p>
             </div>
             <nav class="navbar-nav">
                 <div class="nav-item" @click="homePage">
@@ -209,7 +206,7 @@ const loadCategorys = async () => {
     
         return{
         name:item.name,
-        max:7
+        max:10
         };
     });
     let res1=await axios.get("/category/listname")
@@ -398,10 +395,10 @@ function startReading() {
     background-blend-mode: multiply; /* 使用multiply模式，你可以根据需要选择其他混合模式 */
 }
 
-.maintitle{
+.maintitle{ 
     color:white;
     position:absolute;
-    font-size:80px;
+    font-size:65px;
     top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
