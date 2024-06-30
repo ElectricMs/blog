@@ -1,6 +1,6 @@
 <template>
     <div>
-        File.vue
+        About.vue
     </div>
 </template>
 
@@ -9,13 +9,13 @@
 </script>
 
 <style lang="scss" scoped>
-    *{
-        display: grid;
-        place-items: center;     
-        height: 100vh; 
-    }
-    
-    div{
-        font-size:50px;
-    }
+* {
+    display: grid;
+    place-items: center;
+    height: 100vh;
+}
+
+div {
+    font-size: 50px;
+}
 </style>
