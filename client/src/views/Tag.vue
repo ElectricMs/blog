@@ -45,11 +45,6 @@
             </nav>
     </header>
 
-    
-
-
-
-
     <div class="container" >
         
         <div class="con-title">
@@ -57,18 +52,10 @@
             文章标签
         </div>
         <div class="tag-chips">
-            <div class="item" v-for="(tag, index) in tagListInfo" >
-                
-               
-
-                
-                <n-button class="chip waves-effect " style="background-color: #F9EBEA;">{{ tag.name }}
+            <div class="item" v-for="(tag, index) in tagListInfo" :key="index">
+                <n-button class="chip waves-effect ":style="{backgroundColor:colors[index%colors.length]}">{{ tag.name }}
                     <span class="tag-length">{{ tag.count_id }}</span>
                 </n-button>
-               
-                
-                
-
             </div>
         </div>
      
@@ -93,25 +80,15 @@ import ChartWordCloud from './ChartWordCloud.vue'
 import { ref, reactive, inject, onMounted, computed, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 // 各种小图标的实现
-import { LogoGithub,ArrowDownCircle, AlbumsOutline, AlbumsSharp } from '@vicons/ionicons5'
+import { AlbumsSharp } from '@vicons/ionicons5'
 import { HomeSharp,PricetagsSharp,BookmarkSharp,ArchiveSharp,PersonCircleSharp,LogInSharp } from '@vicons/ionicons5'
-import { BulbOutline,ThumbsUpOutline } from '@vicons/ionicons5'
-import { onBeforeMount } from 'vue';
-
-
-
 // 路由
 
 const router = useRouter()
 
 const axios = inject("axios")
 
-
-
-
 const tagListInfo=ref([])
-
-
 
 const state = reactive({
   chartOptions: {
@@ -148,23 +125,6 @@ onMounted(() => {
     loadTags();
 })
 
-const testtag = ()=>{
-    console.log(tagListInfo)
-    console.log(tagListInfo.value)
-    console.log(state.chartOptions.series[0].data)
-
-    console.log(state)
-    
-}
-
-
-
-
-//页面跳转
-const toDetail = (blog)=>{
-    router.push({path:"/detail",query:{id:blog.id}})//返回时携带文章id
-}
-
 const homePage = () => {
     router.push("/")
     // location.reload(true);
@@ -196,6 +156,9 @@ const classify = () => {
 //实现导航栏在网页最上方和向下滚动时的不同效果
 const navBar = ref('navbar');
 
+//颜色列表
+const colors=ref(['#F9EBEA', '#F5EEF8','#D5F5E3','#E8F8F5','#FEF9E7','#F8F9F9','#82E0AA','#D7BDE2','#A3E4D7','#85C1E9']);
+
 onMounted(() => {
   const handleScroll = () => {
     const scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;//适配不同浏览器
@@ -210,57 +173,6 @@ onMounted(() => {
     window.removeEventListener('scroll', handleScroll);
   });
 });
-
-function startReading() {
-    var element = document.getElementById("startReading");
-    if(element) {
-        element.scrollIntoView({behavior: "smooth"}); // 平滑滚动
-    } else {
-        console.error('未找到ID为 "startReading" 的元素');
-    }
-}
-
-
-// const state = reactive({
-//       chartOptions: {
-//         series: [
-//           {
-//             gridSize: 20,
-//             data: [
-//               {
-//                 name: '标签1',
-//                 value: 30,
-//                 // textStyle: {
-//                 //   color: 'rgba(0, 0, 0, .4)',
-//                 // },
-//               },
-//               {name: '五条悟',value: 30},
-//               { name: '狗卷', value: 28 },
-//               { name: 'Shoto', value: 28 },
-//               { name: 'Vox', value: 25 },
-//               { name: "Aza", value: 23 },
-//               { name: 'Mysta', value: 20 },
-//               { name: 'Uki', value: 18 },
-//               { name: 'Luca', value: 15 },
-//               { name: 'Shu', value: 10 },
-//               { name: 'Ike', value: 10 },
-//               { name: "Fulgun", value: 10 }
-//             ],
-//           },
-//         ],
-//       },
-//     })
-// if (Array.isArray(tagListInfo.value)) {
-//   console.log("tagListInfo.value 是一个数组");
-// //   await loadTags();这句加上就白屏了
-//     console.log(tagListInfo)
-//   console.log(tagListInfo.value);//因为后面在const state要用tagListInfo.value，我就控制台输出检查一下tagListInfo.value，结果是空数组。
-// } else {
-//   console.log("tagListInfo.value 不是一个数组");
-// }
-
-
-
 </script>
 
 <style lang="scss" scoped>
@@ -435,11 +347,13 @@ function startReading() {
 }
 .tag-chips{
     display:flex;
-    justify-content: center;
-    
+    justify-content: flex-start;
     margin: 1rem auto 0.5rem;
     max-width: 850px;
-    text-align: center;
+    margin-left: 90px;
+
+    flex-wrap:wrap;//允许换行
+    
 }
 .con-title{
     text-align:center;
@@ -448,122 +362,6 @@ function startReading() {
     border-top:20px;
     font-size: 2rem;
     font-weight: 700;
-}
-
-.con-text{
-    margin:0 auto;
-    font-size: 14px;
-    line-height: 1.6;
-    text-align:center;
-    width:68%;
-    color:#85929e;
-    font-size:18px;
-}
-
-.articlecard{
-    background-image: url("../medias/articlebackground/9.jpg");
-    width: 95%;
-    height: 280px;
-    margin:0 auto;
-    margin-bottom: 30px;
-    background-size: cover; /* 图片将被缩放以适应内容区域，保持原图宽高比且填充整个容器 */
-    background-position: center center; 
-    background-repeat: no-repeat; 
-    border-radius: 10px;
-    
-    /* 确保articlecard是一个块级元素或者设置了固定/最大宽度，以便子元素能居中 */
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* 使子元素在主轴上居中，对于column方向就是垂直居中 */
-    justify-content: center; /* 可选，如果希望内容也垂直居中的话 */
-    text-align: center; /* 用于内部文本元素的水平居中 */
-}
-
-.card-content{
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* 使子元素在主轴上居中，对于column方向就是垂直居中 */
-    justify-content: center; /* 可选，如果希望内容也垂直居中的话 */
-    text-align: center; /* 用于内部文本元素的水平居中 */
-    filter: brightness(1);
-}
-
-.card-title{
-    margin-top:0px;
-    margin-bottom: 0px;
-    font-size: 1.6rem;
-    font-weight: bold;
-    line-height: 1.7rem;
-    color: white;
-    max-width: 60%;
-}
-
-.card-text{
-    color: white;
-    margin-top:30px;
-    max-width: 70%;
-}
-
-.articlecard2{
-    width: 95%;
-    height: 280px;
-    margin:0 auto;
-    margin-bottom: 30px;
-    margin-top: 30px;
-    display:flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-
-.articlecard3{
-    width: 49%;
-    height: 280px;
-    margin:0 0;
-    margin-bottom: 30px;
-    background-size: cover; /* 图片将被缩放以适应内容区域，保持原图宽高比且填充整个容器 */
-    background-position: center center; 
-    background-repeat: no-repeat; 
-    border-radius: 10px;
-    z-index: 0;
-    position: relative; 
-    /* 确保articlecard是一个块级元素或者设置了固定/最大宽度，以便子元素能居中 */
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* 使子元素在主轴上居中，对于column方向就是垂直居中 */
-    justify-content: center; /* 可选，如果希望内容也垂直居中的话 */
-    text-align: center; /* 用于内部文本元素的水平居中 */
-}
-
-#card-left::before{
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 10px;
-    background-image: url('../medias/articlebackground/68.jpg');
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-    filter: brightness(0.8);
-    z-index: -1;
-}
-
-#card-right::before{
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 10px;
-    background-image: url('../medias/articlebackground/25.jpg');
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-    filter: brightness(0.8);
-    z-index: -1;
 }
 
 .footer {
@@ -588,7 +386,7 @@ function startReading() {
 }
 .chip{
     text-decoration: none;
-    color:#34495e;;
+    color:#34495e;
     -webkit-tap-highlight-color: transparent;
     background-color: transparent;
 
@@ -597,27 +395,19 @@ function startReading() {
     display: inline-flex;
     line-height: 0;
     font-size: 1rem;
-    font-weight: 500;
+    
     border-radius: 5px;
     cursor: pointer;
     box-shadow: 0 3px 5px rgba(0, 0, 0, .12);
     z-index: 0; 
 }
-.container .chip:default {
-    color: #34495e;
-}
+
 
 .chip:hover{
     color: white;
     box-shadow: 2px 5px 10px #aaa !important;
     background: linear-gradient(to bottom right,rgb(113, 206, 113) 0%, rgb(2, 165, 2) 100%) !important
 }
-.chip:active{
-    color: white;
-    box-shadow: 2px 5px 10px #aaa !important;
-    background: linear-gradient(to bottom right, #FF5E3A 0%, #FF2A68 100%) !important;
-}
-
 .waves-effect{
     transition: 0.3s ease-out;
 }
@@ -645,7 +435,8 @@ function startReading() {
       }
     }
 .item{
-    margin-right:10px;
+    margin-right:20px;
+    margin-bottom: 10px;
 }
 
 </style>

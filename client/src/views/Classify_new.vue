@@ -45,25 +45,15 @@
             </nav>
     </header>
 
-    
-
-
-
-
     <div class="container" >
         
         <div class="con-title">
             <n-icon size="26"class="icon-maximize"><Bookmark/></n-icon>
             文章分类
         </div>
-        <!-- <div>
-                <n-popselect @update:value="searchByCategory" v-model:value="selectedCategory" :options="categortyOptions" trigger="click">
-                    <div>分类<span>{{ categoryName }}</span></div>
-                </n-popselect>
-        </div> -->
         <div class="cate-chips">
-            <div class="item" v-for="(categorty,index) in categortyOptions">
-                <n-button class="chip waves-effect " style="background-color: #F9EBEA;">{{ categorty.name }}
+            <div class="item" v-for="(categorty,index) in categortyOptions":key="index">
+                <n-button class="chip waves-effect " :style="{backgroundColor:colors[index%colors.length]}">{{ categorty.name }}
                     
                 </n-button>
             </div>   
@@ -96,19 +86,17 @@ import * as echarts from 'echarts';
 import { ref, reactive, inject, onMounted, computed, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 // 各种小图标的实现
-import { LogoGithub,ArrowDownCircle, AlbumsOutline, AlbumsSharp, Bookmark } from '@vicons/ionicons5'
+import { Bookmark } from '@vicons/ionicons5'
 import { HomeSharp,PricetagsSharp,BookmarkSharp,ArchiveSharp,PersonCircleSharp,LogInSharp } from '@vicons/ionicons5'
-import { BulbOutline,ThumbsUpOutline } from '@vicons/ionicons5'
+
 // 路由
 const router = useRouter()
 
 const axios = inject("axios")
-// 选中的分类
-const selectedCategory = ref(0)
+
 // 分类选项
 const categortyOptions = ref([])
-// 文章列表
-const blogListInfo = ref([])
+
 
 const option = ref({
     backgroundColor: 'rgba(255,255,255,1 )',         // 背景色，默认无背景	rgba(51,255,255,0.7)
@@ -241,20 +229,6 @@ onUnmounted(() => {
     chart1.value.dispose();
   }
 });
-
-
-
-
-//选中分类
-const searchByCategory = (categoryId)=>{
-    pageInfo.categoryId = categoryId ;
-    loadBlogs()
-}
-//页面跳转
-const toDetail = (blog)=>{
-    router.push({path:"/detail",query:{id:blog.id}})//返回时携带文章id
-}
-
 const homePage = () => {
     router.push("/")
     // location.reload(true);
@@ -281,49 +255,12 @@ const dashboard = () => {
 const classify = () => {
     router.push("/classify")
 }
-// 查询和分页数据
-const pageInfo = reactive({
-    page: 1,
-    pageSize: 3,
-    pageCount: 0,
-    count: 0,
-    keyword: "",
-    categoryId:0,
-})
-
-
-
-//获取博客列表
-const loadBlogs = async (page = 0) => {
-    if (page != 0) {
-        pageInfo.page = page;
-    }
-    let res = await axios.get(`/blog/search?keyword=${pageInfo.keyword}&page=${pageInfo.page}&pageSize=${pageInfo.pageSize}&categoryId=${pageInfo.categoryId}`)
-    let temp_rows = res.data.data.rows;
-    // 处理获取的文章列表数据
-    for (let row of temp_rows) {
-        row.content += "..."
-        // 把时间戳转换为年月日
-        let d = new Date(row.create_time)
-        row.create_time = `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`
-    }
-    blogListInfo.value = temp_rows;
-    pageInfo.count = res.data.data.count;
-    //计算分页大小
-    pageInfo.pageCount = parseInt(pageInfo.count / pageInfo.pageSize) + (pageInfo.count % pageInfo.pageSize > 0 ? 1 : 0)
-    console.log(res)
-}
-const categoryName = computed(() => {
-    //获取选中的分类 find
-    let selectedOption = categortyOptions.value.find((option) => { return option.value == selectedCategory.value })
-    //返回分类的名称 如果找的到的话
-    return selectedOption ? selectedOption.label : ""
-})
-
-
 
 //实现导航栏在网页最上方和向下滚动时的不同效果
 const navBar = ref('navbar');
+
+//颜色列表
+const colors=ref(['#F9EBEA', '#F5EEF8','#D5F5E3','#E8F8F5','#FEF9E7','#F8F9F9','#82E0AA','#D7BDE2','#A3E4D7','#85C1E9']);
 
 onMounted(() => {
   const handleScroll = () => {
@@ -339,16 +276,6 @@ onMounted(() => {
     window.removeEventListener('scroll', handleScroll);
   });
 });
-
-function startReading() {
-    var element = document.getElementById("startReading");
-    if(element) {
-        element.scrollIntoView({behavior: "smooth"}); // 平滑滚动
-    } else {
-        console.error('未找到ID为 "startReading" 的元素');
-    }
-}
-
 
 </script>
 
@@ -524,10 +451,11 @@ function startReading() {
 }
 .cate-chips{
     display:flex;
-    justify-content: center;
+    flex-wrap:flex;
+    justify-content: flex-start;
     margin: 1rem auto 0.5rem;
-    max-width: 850px;
     text-align: center;
+    margin-left: 120px;
 }
 .con-title{
     text-align:center;
@@ -537,123 +465,6 @@ function startReading() {
     font-size: 2rem;
     font-weight: 700;
 }
-
-.con-text{
-    margin:0 auto;
-    font-size: 14px;
-    line-height: 1.6;
-    text-align:center;
-    width:68%;
-    color:#85929e;
-    font-size:18px;
-}
-
-.articlecard{
-    background-image: url("../medias/articlebackground/9.jpg");
-    width: 95%;
-    height: 280px;
-    margin:0 auto;
-    margin-bottom: 30px;
-    background-size: cover; /* 图片将被缩放以适应内容区域，保持原图宽高比且填充整个容器 */
-    background-position: center center; 
-    background-repeat: no-repeat; 
-    border-radius: 10px;
-    
-    /* 确保articlecard是一个块级元素或者设置了固定/最大宽度，以便子元素能居中 */
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* 使子元素在主轴上居中，对于column方向就是垂直居中 */
-    justify-content: center; /* 可选，如果希望内容也垂直居中的话 */
-    text-align: center; /* 用于内部文本元素的水平居中 */
-}
-
-.card-content{
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* 使子元素在主轴上居中，对于column方向就是垂直居中 */
-    justify-content: center; /* 可选，如果希望内容也垂直居中的话 */
-    text-align: center; /* 用于内部文本元素的水平居中 */
-    filter: brightness(1);
-}
-
-.card-title{
-    margin-top:0px;
-    margin-bottom: 0px;
-    font-size: 1.6rem;
-    font-weight: bold;
-    line-height: 1.7rem;
-    color: white;
-    max-width: 60%;
-}
-
-.card-text{
-    color: white;
-    margin-top:30px;
-    max-width: 70%;
-}
-
-.articlecard2{
-    width: 95%;
-    height: 280px;
-    margin:0 auto;
-    margin-bottom: 30px;
-    margin-top: 30px;
-    display:flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-
-.articlecard3{
-    width: 49%;
-    height: 280px;
-    margin:0 0;
-    margin-bottom: 30px;
-    background-size: cover; /* 图片将被缩放以适应内容区域，保持原图宽高比且填充整个容器 */
-    background-position: center center; 
-    background-repeat: no-repeat; 
-    border-radius: 10px;
-    z-index: 0;
-    position: relative; 
-    /* 确保articlecard是一个块级元素或者设置了固定/最大宽度，以便子元素能居中 */
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* 使子元素在主轴上居中，对于column方向就是垂直居中 */
-    justify-content: center; /* 可选，如果希望内容也垂直居中的话 */
-    text-align: center; /* 用于内部文本元素的水平居中 */
-}
-
-#card-left::before{
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 10px;
-    background-image: url('../medias/articlebackground/68.jpg');
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-    filter: brightness(0.8);
-    z-index: -1;
-}
-
-#card-right::before{
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 10px;
-    background-image: url('../medias/articlebackground/25.jpg');
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-    filter: brightness(0.8);
-    z-index: -1;
-}
-
 .footer {
     
     line-height: 25px;
@@ -666,39 +477,25 @@ function startReading() {
     align-items: center;
 
 }
-a{
-    text-decoration: none;
-    color:#34495e;;
-    -webkit-tap-highlight-color: transparent;
-    background-color: transparent;
-}
-.tag-length {
-    color: #e91e63;
-    margin-top: 1px;
-    margin-left: 5px;
-    margin-right: -2px;
-    font-size: 0.5rem;
-}
+
+
 .chip{
+    color:#34495e;
     margin: 10px 10px;
     padding: 19px 14px;
     display: inline-flex;
     line-height: 0;
-    font-size: 1rem;
-    font-weight: 500;
+    font-size:1rem;
+    
     border-radius: 5px;
-    cursor: pointer;
+    cursor: pointer;//鼠标光标设置为手形
     box-shadow: 0 3px 5px rgba(0, 0, 0, .12);
     z-index: 0; 
 }
-.container .chip:default {
+.chip:default {
     color: #34495e;
 }
-.chip:active{
-    color: white;
-    box-shadow: 2px 5px 10px #aaa !important;
-    background: linear-gradient(to bottom right, #FF5E3A 0%, #FF2A68 100%) !important;
-}
+
 .chip:hover{
     color: white;
     box-shadow: 2px 5px 10px #aaa !important;
@@ -729,13 +526,8 @@ a{
 }
 .item{
     margin-right:20px;
+    margin-bottom: 10px;
 }
 
-// #chart1 {
-//   position: relative; /* 绝对定位 */
-//   top: 10px;        /* 从顶部向下移动100px */
-//   left: 20%;         /* 从左边向右移动20% */
-//   width: 80%;        /* 宽度为80% */
-//   height: 400px;     /* 高度为400px */
-// }
+
 </style>
