@@ -1,11 +1,9 @@
 <template>
-    <div>
-        About.vue
-    </div>
+
 </template>
-
+    
 <script setup>
-
+window.location.href = '../../public/index.html';
 </script>
 
 <style lang="scss" scoped>
