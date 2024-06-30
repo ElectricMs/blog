@@ -2,20 +2,16 @@
 <template>
     <div class="backgroundimg"></div>
     <div class="frontimg-container">
-        <img class="frontimg" src="../medias/4.jpg" alt="Front Image" >
+        <img class="frontimg" src="../medias/1.png" alt="Front Image" >
         <div class="bottom-div" id="startReading"></div><!--定位用 无内容-->
     </div>
-    <div class="maintitle">这是一个博客</div>
+    <div class="maintitle">克服己身，叫身服我</div>
    
-    <div class="futitle">（标签页）</div>
-
-
-
     <!--导航栏-->
     <header class="navbar" ref="navBar">
             <div class="left-section">
                 <img src="../medias/logo.png" alt="Logo" class="navbar-logo" @click="homePage"/>
-                <p  @click="homePage">这是一个博客</p>
+                <p  @click="homePage">所念皆星河</p>
             </div>
             <nav class="navbar-nav">
                 <div class="nav-item" @click="homePage">
@@ -221,44 +217,6 @@ function startReading() {
 }
 
 
-// const state = reactive({
-//       chartOptions: {
-//         series: [
-//           {
-//             gridSize: 20,
-//             data: [
-//               {
-//                 name: '标签1',
-//                 value: 30,
-//                 // textStyle: {
-//                 //   color: 'rgba(0, 0, 0, .4)',
-//                 // },
-//               },
-//               {name: '五条悟',value: 30},
-//               { name: '狗卷', value: 28 },
-//               { name: 'Shoto', value: 28 },
-//               { name: 'Vox', value: 25 },
-//               { name: "Aza", value: 23 },
-//               { name: 'Mysta', value: 20 },
-//               { name: 'Uki', value: 18 },
-//               { name: 'Luca', value: 15 },
-//               { name: 'Shu', value: 10 },
-//               { name: 'Ike', value: 10 },
-//               { name: "Fulgun", value: 10 }
-//             ],
-//           },
-//         ],
-//       },
-//     })
-// if (Array.isArray(tagListInfo.value)) {
-//   console.log("tagListInfo.value 是一个数组");
-// //   await loadTags();这句加上就白屏了
-//     console.log(tagListInfo)
-//   console.log(tagListInfo.value);//因为后面在const state要用tagListInfo.value，我就控制台输出检查一下tagListInfo.value，结果是空数组。
-// } else {
-//   console.log("tagListInfo.value 不是一个数组");
-// }
-
 
 
 </script>
@@ -312,7 +270,7 @@ function startReading() {
 .maintitle{
     color:white;
     position:absolute;
-    font-size:80px;
+    font-size:65px;
     top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);

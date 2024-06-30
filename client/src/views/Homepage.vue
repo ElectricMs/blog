@@ -4,7 +4,7 @@
         <img class="frontimg" src="../medias/1.png" alt="Front Image" >
         <div class="bottom-div" id="startReading"></div><!--定位用 无内容-->
     </div>
-    <div class="maintitle">这是一个博客</div>
+    <div class="maintitle">克服己身，叫身服我</div>
     <div class="cover-btns">
         <a @click="startReading()">
             <n-icon size="25"class="icon-maximize"><ArrowDownCircle/></n-icon>
@@ -22,7 +22,7 @@
     <header class="navbar" ref="navBar">
             <div class="left-section">
                 <img src="../medias/logo.png" alt="Logo" class="navbar-logo" @click="homePage"/>
-                <p  @click="homePage">这是一个博客</p>
+                <p  @click="homePage">所念皆星河</p>
             </div>
             <nav class="navbar-nav">
                 <div class="nav-item" @click="homePage">
@@ -114,9 +114,6 @@
 
             </div>
         </div>
-
-
-
         <!--文章列表-->
         <div v-for="(blog) in blogListInfo" >
             <n-card :title="blog.title" @click="toDetail(blog)">
@@ -131,12 +128,33 @@
                 </template>
             </n-card>
         </div>
-            <!--分页-->
-        <n-pagination @update:page="loadBlogs" v-model:page="pageInfo.page" :page-count="pageInfo.pageCount" />
 
         <n-divider />
-        
+            <!--分页-->
+        <n-pagination @update:page="loadBlogs" v-model:page="pageInfo.page" :page-count="pageInfo.pageCount" />
     </div>
+
+    <div class="cocontainer">
+        <div class="article_container">
+        <img src="../medias/articlebackground/0.jpg" alt="Image 1" class="grid-image">
+        <img src="../medias/articlebackground/2.jpg" alt="Image 2" class="grid-image">
+        <img src="../medias/articlebackground/12.jpg" alt="Image 3" class="grid-image">
+
+        <img src="../medias/articlebackground/0.jpg" alt="Image 1" class="grid-image">
+        <img src="../medias/articlebackground/2.jpg" alt="Image 2" class="grid-image">
+        <img src="../medias/articlebackground/12.jpg" alt="Image 3" class="grid-image">
+        
+        <img src="../medias/articlebackground/0.jpg" alt="Image 1" class="grid-image">
+        <img src="../medias/articlebackground/2.jpg" alt="Image 2" class="grid-image">
+        <img src="../medias/articlebackground/12.jpg" alt="Image 3" class="grid-image">
+
+        <img src="../medias/articlebackground/0.jpg" alt="Image 1" class="grid-image">
+        <img src="../medias/articlebackground/2.jpg" alt="Image 2" class="grid-image">
+        <img src="../medias/articlebackground/12.jpg" alt="Image 3" class="grid-image">
+    </div>
+    </div>
+    
+
 
     <div class="footer">
         <div>这是一个页尾</div>
@@ -320,7 +338,7 @@ function startReading() {
 .maintitle{
     color:white;
     position:absolute;
-    font-size:80px;
+    font-size:65px;
     top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -352,6 +370,12 @@ function startReading() {
     display: flex; 
     align-items: center; 
     justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.cover-btns a:hover {
+    background-color: #db3f44; /* 您希望在鼠标悬停时变为的颜色，这里以绿色为例 */
+    border: 1px solid #db3f44;
 }
 
 .icon-maximize{
@@ -427,7 +451,7 @@ function startReading() {
 }
 
 .container {
-    max-width: 1000px;
+    max-width: 900px;
     margin: 20px auto;
     background-color:white;
     padding:20px 30px;
@@ -558,6 +582,52 @@ function startReading() {
     background-repeat: no-repeat;
     filter: brightness(0.8);
     z-index: -1;
+}
+
+.cocontainer{
+    max-width: 900px;
+    margin: 20px auto;
+    background-color:white;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.article_container {
+ 
+    
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 默认三列布局 */
+    grid-auto-rows: calc(25% - 10px); /* 调整行高以适应两行布局，减去间距 */
+    gap: 10px; /* 图片之间的间距 */
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
+    max-width: 100%;
+    margin: 0 auto; /* 自动水平居中容器 */
+}
+
+
+@media (max-width: 768px) {
+    .article_container {
+    grid-template-columns: repeat(2, 1fr); 
+    grid-auto-rows: calc(16.666% - 10px); 
+  }
+}
+
+
+@media (max-width: 480px) {
+    .article_container {
+    grid-template-columns: 1fr; 
+    grid-auto-rows: calc(8.333% - 10px); 
+  }
+}
+
+.grid-image{
+    width: 100%; /* 图片宽度充满格子 */
+    height: 100%;
+    max-width: 100%; /* 限制图片最大宽度为容器宽度 */
+    max-height: 100%; /* 可选：限制图片最大高度，依据需求设置 */
+    object-fit: cover; /* 保持图片宽高比并填充容器，可能会裁剪 */
 }
 
 .footer {
