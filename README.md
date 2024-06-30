@@ -48,12 +48,12 @@
 运行 `npm run build` 构建生产环境版本。
 
 ## 示例
-
-<img src="/client/src/medias/readmeimg/0a928ef29b57d0bb709c3c276c3983c.png" alt="23345ba2b06b8a437a03fd3c2a7258e" style="zoom: 33%;" />
-<img src="/client/src/medias/readmeimg/2ea0d05ea6a166735207340e52556c2.png" alt="23345ba2b06b8a437a03fd3c2a7258e" style="zoom: 33%;" />
 <img src="/client/src/medias/readmeimg/42cd84bbc54470dcaaf335069ad5a47.png" alt="23345ba2b06b8a437a03fd3c2a7258e" style="zoom: 33%;" />
-<img src="/client/src/medias/readmeimg/84c3b668368411bca3931a8f2adc46c.png" alt="23345ba2b06b8a437a03fd3c2a7258e" style="zoom: 33%;" />
+<img src="/client/src/medias/readmeimg/0a928ef29b57d0bb709c3c276c3983c.png" alt="23345ba2b06b8a437a03fd3c2a7258e" style="zoom: 33%;" />
 <img src="/client/src/medias/readmeimg/ddb62edb619cb37db5decbbae255358.png" alt="23345ba2b06b8a437a03fd3c2a7258e" style="zoom: 33%;" />
+<img src="/client/src/medias/readmeimg/84c3b668368411bca3931a8f2adc46c.png" alt="23345ba2b06b8a437a03fd3c2a7258e" style="zoom: 33%;" />
+<img src="/client/src/medias/readmeimg/2ea0d05ea6a166735207340e52556c2.png" alt="23345ba2b06b8a437a03fd3c2a7258e" style="zoom: 33%;" />
+
 ## 贡献
 
 欢迎贡献代码。请提交问题（issue）或者发送合并请求（pull request）。
