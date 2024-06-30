@@ -83,10 +83,11 @@
 
         <div class="articlecard">
            <div class="card-content">
-                <h3 class="card-title">这是一个标题，而且这个标题比较长</h3>
-                <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam eos,
-                    ex omnis aliquam temporibus assumenda eum modi nobis ad consequuntur a, tempore, 
-                    ab excepturi est quidem laboriosam expedita cum iste?
+                <h3 class="card-title">Python面向对象</h3>
+                <p class="card-text">Python从设计之初就已经是一门面向对象的语言，正因为如此，在Python中创建一个类和对象是很容易的。
+                    本章节我们将详细介绍Python的面向对象编程。
+                    如果你以前没有接触过面向对象的编程语言，那你可能需要先了解一些面向对象语言的一些基本特征，
+                    在头脑里头形成一个基本的面向对象的概念，这样有助于你更容易的学习Python的面向对象编程。
                 </p>
            </div>
 
@@ -94,10 +95,13 @@
         <div class="articlecard2">
             <div class="articlecard3" id="card-left">
                 <div class="card-content">
-                    <h3 class="card-title">这是一个标题，而且这个标题比较长</h3>
-                    <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam eos,
-                        ex omnis aliquam temporibus assumenda eum modi nobis ad consequuntur a, tempore, 
-                        ab excepturi est quidem laboriosam expedita cum iste?
+                    
+                 
+                    <h3 class="card-title">Java TCP通信详解</h3>
+                    
+                    <p class="card-text">TCP（Transmission Control Protocol）是一种面向连接的、可靠的网络传输协议，它提供了端到端的数据传输和可靠性保证。
+                        TCP通信适用于对数据传输的可靠性和完整性要求较高的场景，如文件传输、网页浏览等。
+                        本文将详细介绍Java中如何使用TCP协议进行网络通信，包括TCP套接字、服务器和客户端的创建、数据传输等。
                     </p>
                 </div>
 
@@ -105,10 +109,9 @@
 
             <div class="articlecard3" id="card-right">
                 <div class="card-content">
-                    <h3 class="card-title">这是一个标题，而且这个标题比较长</h3>
-                    <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam eos,
-                        ex omnis aliquam temporibus assumenda eum modi nobis ad consequuntur a, tempore, 
-                        ab excepturi est quidem laboriosam expedita cum iste?
+                    <h3 class="card-title">C++编程规范</h3>
+                    <p class="card-text">注释虽然写起来很痛苦, 但对保证代码可读性至关重要. 下面的规则描述了如何注释以及在哪儿注释. 当然也要记住: 注释固然很重要, 
+                        但最好的代码应当本身就是文档. 有意义的类型名和变量名, 要远胜过要用注释解释的含糊不清的名字.
                     </p>
                 </div>
 
@@ -134,25 +137,28 @@
         <n-pagination @update:page="loadBlogs" v-model:page="pageInfo.page" :page-count="pageInfo.pageCount" />
     </div>
 
-    <div class="cocontainer">
+    
+    <!--
+        <div class="cocontainer">
         <div class="article_container">
-        <img src="../medias/articlebackground/0.jpg" alt="Image 1" class="grid-image">
-        <img src="../medias/articlebackground/2.jpg" alt="Image 2" class="grid-image">
-        <img src="../medias/articlebackground/12.jpg" alt="Image 3" class="grid-image">
+            <img src="../medias/articlebackground/0.jpg" alt="Image 1" class="grid-image">
+            <img src="../medias/articlebackground/2.jpg" alt="Image 2" class="grid-image">
+            <img src="../medias/articlebackground/12.jpg" alt="Image 3" class="grid-image">
 
-        <img src="../medias/articlebackground/0.jpg" alt="Image 1" class="grid-image">
-        <img src="../medias/articlebackground/2.jpg" alt="Image 2" class="grid-image">
-        <img src="../medias/articlebackground/12.jpg" alt="Image 3" class="grid-image">
-        
-        <img src="../medias/articlebackground/0.jpg" alt="Image 1" class="grid-image">
-        <img src="../medias/articlebackground/2.jpg" alt="Image 2" class="grid-image">
-        <img src="../medias/articlebackground/12.jpg" alt="Image 3" class="grid-image">
+            <img src="../medias/articlebackground/0.jpg" alt="Image 1" class="grid-image">
+            <img src="../medias/articlebackground/2.jpg" alt="Image 2" class="grid-image">
+            <img src="../medias/articlebackground/12.jpg" alt="Image 3" class="grid-image">
+            
+            <img src="../medias/articlebackground/0.jpg" alt="Image 1" class="grid-image">
+            <img src="../medias/articlebackground/2.jpg" alt="Image 2" class="grid-image">
+            <img src="../medias/articlebackground/12.jpg" alt="Image 3" class="grid-image">
 
-        <img src="../medias/articlebackground/0.jpg" alt="Image 1" class="grid-image">
-        <img src="../medias/articlebackground/2.jpg" alt="Image 2" class="grid-image">
-        <img src="../medias/articlebackground/12.jpg" alt="Image 3" class="grid-image">
+            <img src="../medias/articlebackground/0.jpg" alt="Image 1" class="grid-image">
+            <img src="../medias/articlebackground/2.jpg" alt="Image 2" class="grid-image">
+            <img src="../medias/articlebackground/12.jpg" alt="Image 3" class="grid-image">
+        </div>
     </div>
-    </div>
+    -->
     
 
 
