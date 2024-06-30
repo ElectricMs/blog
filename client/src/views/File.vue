@@ -1,21 +1,19 @@
 <template>
-    <div>
-        File.vue
-    </div>
+
 </template>
-
+    
 <script setup>
-
+window.location.href = '../../public/index.html';
 </script>
 
 <style lang="scss" scoped>
-    *{
-        display: grid;
-        place-items: center;     
-        height: 100vh; 
-    }
-    
-    div{
-        font-size:50px;
-    }
+* {
+    display: grid;
+    place-items: center;
+    height: 100vh;
+}
+
+div {
+    font-size: 50px;
+}
 </style>
