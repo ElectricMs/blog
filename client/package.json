@@ -13,6 +13,7 @@
     "axios": "^1.6.8",
     "echarts": "^5.5.0",
     "echarts-wordcloud": "^2.1.0",
+    "jquery": "^3.7.1",
     "pinia": "^2.1.7",
     "sass": "^1.76.0",
     "vue": "^3.4.21",
